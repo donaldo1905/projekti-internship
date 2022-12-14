@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand">Movies2watch</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link">Log In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="cursor: pointer;" (click)="logout()">Log Out</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item">Action</a></li>
+            <li><a class="dropdown-item">Comedy</a></li>
+            <li><a class="dropdown-item">Horror</a></li>
+            <li><a class="dropdown-item">Adventure</a></li>
+            <li><a class="dropdown-item">Crime</a></li>
+            <li><a class="dropdown-item">Historic</a></li>
+            <li><a class="dropdown-item">Documentary</a></li>
+          </ul>
+        </li>
+      </ul>
+      <mat-icon>search</mat-icon>
+      <form class="d-flex" role="search">
+        <mat-form-field>
+          <input matInput type="search" placeholder="Search...">
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid px-5">
+  <div class="row">
+    <div class="col-4">
+      <div class="movie_card " *ngFor="let item of items">
+        <div class="info_section">
+          <div class="movie_header">
+            <img class="locandina" src='{{item.photo}}' />
+            <h1>{{item.name}}</h1>
+            <h4>2018, {{item.director}}</h4>
+            <span class="minutes">1{{item.runTime}}</span>
+            <p class="type">{{item.category}}</p>
+          </div>
+          <div class="movie_desc">
+            <p class="text">
+              {{item.description}}
+            </p>
+          </div>
+          <div class="movie_social">
+            <ul>
+              <li><i class="material-icons">share</i></li>
+              <li><i class="material-icons"></i></li>
+              <li><i class="material-icons">chat_bubble</i></li>
+            </ul>
+          </div>
+        </div>
+        <div class="blur_back" style="background: url('{{item.photo}}'); background-size: cover;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<button (click)="addItem()">Button</button>
