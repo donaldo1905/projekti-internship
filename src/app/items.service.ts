@@ -11,7 +11,8 @@ export interface ItemModel{
   description: string,
   director: string,
   photo: string,
-  trailer: string
+  trailer: string,
+  year: number
 }
 
 @Injectable({

@@ -1,6 +1,9 @@
+import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { getToken } from '@angular/fire/app-check';
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs'
 import { LoginFormComponent } from './login-form.component';
 
 @Injectable({
@@ -8,11 +11,14 @@ import { LoginFormComponent } from './login-form.component';
 })
 export class AuthService {
 
+  loggedUser = new BehaviorSubject<any>(null)
   constructor(private fireAuth: AngularFireAuth, private router: Router) {}
 
   login(email: string, password: string){
    this.fireAuth.signInWithEmailAndPassword(email,password).then( (res) => {
-    localStorage.setItem('user',JSON.stringify(res))
+    res.user?.getIdToken().then( token => {
+      this.loggedUser.next(token)
+      localStorage.setItem('token', token)})
     this.router.navigate(['/home'])
    },err => {
      alert(err.message); 

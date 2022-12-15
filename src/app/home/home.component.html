@@ -27,6 +27,10 @@
             <li><a class="dropdown-item">Documentary</a></li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModalLong">Add Item</a>
+        </li>
+     
       </ul>
       <mat-icon>search</mat-icon>
       <form class="d-flex" role="search">
@@ -39,8 +43,8 @@
 </nav>
 <div class="container-fluid px-5">
   <div class="row">
-    <div class="col-4">
-      <div class="movie_card " *ngFor="let item of items">
+    <div class="col-4" *ngFor="let item of items">
+      <div class="movie_card">
         <div class="info_section">
           <div class="movie_header">
             <img class="locandina" src='{{item.photo}}' />
@@ -67,4 +71,56 @@
     </div>
   </div>
 </div>
-<button (click)="addItem()">Button</button>
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-center" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLongTitle">Add an item</h3>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addoredit">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Director</mat-label>
+          <input matInput formControlName="director">
+        </mat-form-field>
+        <div class="inline">
+        <mat-form-field appearance="fill">
+          <mat-label>Year</mat-label>
+          <input matInput type="number" formControlName="year">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>RunTime</mat-label>
+          <input matInput type="number" formControlName="runtime">
+        </mat-form-field></div>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <div formArrayName="getCategories" [ngClass]="getCategories().length < 2 ? 'block' : 'inline' ">
+        <mat-form-field appearance="fill" *ngFor="let photo of getCategories()?.controls; let i = index">
+          <mat-label>Category</mat-label>
+          <mat-select [formControlName]="i">
+            <mat-option value="action">Action</mat-option>
+            <mat-option value="horror">Horror</mat-option>
+            <mat-option value="comedy">Comedy</mat-option>
+            <mat-option value="thriller">Thriller</mat-option>
+            <mat-option value="drama">Drama</mat-option>
+            <mat-option value="fantasy">Fantasy</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        </div>
+        <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add Photo</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

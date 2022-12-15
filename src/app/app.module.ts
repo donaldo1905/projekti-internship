@@ -14,7 +14,11 @@ import { HomeComponent } from './home/home.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { ShowMoreComponent } from './show-more/show-more.component';
-import {  HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptorService } from './auth-interceptor.service';
+import { AddEditComponent } from './home/add-edit/add-edit.component';
+import {MatSelectModule} from '@angular/material/select';
+
 
 
 @NgModule({
@@ -22,7 +26,8 @@ import {  HttpClientModule } from '@angular/common/http';
     AppComponent,
     LoginFormComponent,
     HomeComponent,
-    ShowMoreComponent
+    ShowMoreComponent,
+    AddEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,9 +41,10 @@ import {  HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule,
     MatIconModule,
+    MatSelectModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

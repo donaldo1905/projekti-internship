@@ -194,3 +194,30 @@ mat-form-field{
   }
 }
 
+::ng-deep .cdk-overlay-container{
+  z-index: 9999;
+}
+
+.modal-dialog{
+  // margin-right: auto !important;
+  //   margin-left: auto !important;
+  //   margin-top: 20px!important;
+  margin: 5% auto !important;
+}
+
+mat-form-field{
+  display: block;
+  padding-top: 0;
+}
+
+.modal-title{
+  margin: 0
+}
+
+.inline{
+  display: flex;
+    justify-content: space-between;
+}
+.block{
+  display: block;
+}
