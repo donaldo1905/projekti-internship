@@ -21,6 +21,8 @@ import {MatSelectModule} from '@angular/material/select';
 
 
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +44,9 @@ import {MatSelectModule} from '@angular/material/select';
     HttpClientModule,
     MatIconModule,
     MatSelectModule,
+
     AngularFireModule.initializeApp(environment.firebase)
+
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]

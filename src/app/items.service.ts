@@ -12,7 +12,8 @@ export interface ItemModel{
   director: string,
   photo: string,
   trailer: string,
-  year: number
+  year: number,
+  id?: string
 }
 
 @Injectable({
@@ -28,5 +29,13 @@ export class ItemsService {
 
   getItems(): Observable<ItemModel[]>{
     return this.http.get<ItemModel[]>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items.json")
+  }
+
+  editItem(item: ItemModel): Observable<ItemModel>{
+    return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+item.id+".json", item)
+  }
+
+  delete(item: ItemModel): Observable<ItemModel>{
+    return this.http.delete<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+item.id+".json")
   }
 }

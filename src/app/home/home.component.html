@@ -13,20 +13,7 @@
         <li class="nav-item">
           <a class="nav-link" style="cursor: pointer;" (click)="logout()">Log Out</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Categories
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item">Action</a></li>
-            <li><a class="dropdown-item">Comedy</a></li>
-            <li><a class="dropdown-item">Horror</a></li>
-            <li><a class="dropdown-item">Adventure</a></li>
-            <li><a class="dropdown-item">Crime</a></li>
-            <li><a class="dropdown-item">Historic</a></li>
-            <li><a class="dropdown-item">Documentary</a></li>
-          </ul>
-        </li>
+      
         <li class="nav-item">
           <a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModalLong">Add Item</a>
         </li>
@@ -35,13 +22,13 @@
       <mat-icon>search</mat-icon>
       <form class="d-flex" role="search">
         <mat-form-field>
-          <input matInput type="search" placeholder="Search...">
+          <input matInput type="search" placeholder="Search..." [formControl]="searchForm">
         </mat-form-field>
       </form>
     </div>
   </div>
 </nav>
-<div class="container-fluid px-5">
+<div class="container-fluid px-5" *ngIf="filteredMovies | async as items">
   <div class="row">
     <div class="col-4" *ngFor="let item of items">
       <div class="movie_card">
@@ -49,8 +36,8 @@
           <div class="movie_header">
             <img class="locandina" src='{{item.photo}}' />
             <h1>{{item.name}}</h1>
-            <h4>2018, {{item.director}}</h4>
-            <span class="minutes">1{{item.runTime}}</span>
+            <h4>{{item.year}}, {{item.director}}</h4>
+            <span class="minutes">{{item.runTime}}</span>
             <p class="type">{{item.category}}</p>
           </div>
           <div class="movie_desc">
@@ -60,9 +47,11 @@
           </div>
           <div class="movie_social">
             <ul>
-              <li><i class="material-icons">share</i></li>
               <li><i class="material-icons"></i></li>
               <li><i class="material-icons">chat_bubble</i></li>
+              <li><i class="material-icons" style="font-size:x-large;">star</i></li>
+              <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong" (click)="itemToEdit(item); toggle = true">edit</i></li>
+              <li><i class="material-icons" (click)="deleteItem(item)">delete</i></li>
             </ul>
           </div>
         </div>
@@ -71,7 +60,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="exampleModalLong" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-center" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -97,6 +86,14 @@
           <input matInput type="number" formControlName="runtime">
         </mat-form-field></div>
         <mat-form-field appearance="fill">
+          <mat-label>Photo</mat-label>
+          <input matInput formControlName="photo">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Trailer</mat-label>
+          <input matInput formControlName="trailer">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description"></textarea>
         </mat-form-field>
@@ -114,13 +111,15 @@
         </mat-form-field>
         
         </div>
-        <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add Photo</button>
-      </form>
-      </div>
+        <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add Category</button>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="addoredit.reset(); getCategories().controls = []; toggle == false">Close</button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="addNewItem()" *ngIf="!toggle">Add item</button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="editItem()" *ngIf="toggle">Save changes</button>
       </div>
+    </form>
+      </div>
+      
     </div>
   </div>
 </div>

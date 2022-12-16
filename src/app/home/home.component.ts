@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs';
+import { debounceTime, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
 import { ItemModel, ItemsService } from '../items.service';
 import { AuthService } from '../login-form/auth.service';
-
 
 
 @Component({
@@ -14,7 +13,11 @@ import { AuthService } from '../login-form/auth.service';
 export class HomeComponent implements OnInit {
   items: ItemModel[]= []
   addoredit: FormGroup = new FormGroup({})
+  toggle: boolean = false
+  itemId?: string
+  searchForm: FormControl = new FormControl()
 constructor(private auth: AuthService, private itemsService: ItemsService){}
+ 
   ngOnInit(): void {
     this.itemsService.getItems().pipe(map((res: any) => {
       const products = []
@@ -25,14 +28,15 @@ constructor(private auth: AuthService, private itemsService: ItemsService){}
       }
       return products
     })).subscribe((res)=> {
-this.items = res
-console.log(this.items)
+this.items = res;
     })
     this.addoredit = new FormGroup({
       'name': new FormControl(null, Validators.required),
       'director': new FormControl(null, Validators.required),
       'year': new FormControl(null, Validators.required),
       'runtime': new FormControl(null, Validators.required),
+      'photo': new FormControl(null, Validators.required),
+      'trailer': new FormControl(null, Validators.required),
       'description': new FormControl(null, Validators.required),
       'getCategories': new FormArray([], [Validators.required, Validators.maxLength(3)])
     })
@@ -51,11 +55,71 @@ logout(): void{
   this.auth.signOut()
 }
 
-addItem(){
-  let item: ItemModel = {name: 'Interstellar', runTime: 139, category: ['Adventure','Sci-Fi'], rating: 8.6, comments: ['This is a comment'], description: 'This is a description', director: 'Christopher Nolan', photo: 'https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg', trailer: '', year: 2018}
-  this.itemsService.createItem(item).subscribe()
+filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(startWith(''),debounceTime(100),
+    switchMap(searchValue => {
+      return of(this.items).
+        pipe(map(movies => {
+          return movies.filter(movies => movies.name.toLowerCase().includes(searchValue))
+        }))
+    }))
+
+addNewItem(){
+  let newMovie: ItemModel = {
+    name: this.addoredit.get('name')?.value, 
+    runTime: this.addoredit.get('runtime')?.value,
+    comments: [], 
+    description: this.addoredit.get('description')?.value, 
+    director: this.addoredit.get('director')?.value, 
+    photo: this.addoredit.get('photo')?.value, 
+    rating: 0, 
+    trailer: this.addoredit.get('trailer')?.value,
+    category: this.addoredit.get('getCategories')?.value,
+    year: this.addoredit.get('year')?.value
+  }
+ 
+  this.itemsService.createItem(newMovie).subscribe()
+  this.items.push(newMovie)
+  this.addoredit.reset()
 }
 
+itemToEdit(item: ItemModel){
+  this.addoredit.get('name')?.setValue(item.name)
+  this.addoredit.get('director')?.setValue(item.director)
+  this.addoredit.get('year')?.setValue(item.year)
+  this.addoredit.get('runtime')?.setValue(item.runTime)
+  this.addoredit.get('photo')?.setValue(item.photo)
+  this.addoredit.get('description')?.setValue(item.description)
+  this.addoredit.get('trailer')?.setValue(item.trailer)
+  for(let category of item.category){
+    const control = new FormControl(category,[Validators.required, Validators.maxLength(3)]);
+    (<FormArray>this.addoredit.get('getCategories')).push(control)
+  }
+  this.itemId = item.id
+}
+
+editItem(){
+  let newMovie: ItemModel = {
+    name: this.addoredit.get('name')?.value, 
+    runTime: this.addoredit.get('runtime')?.value,
+    comments: [], 
+    description: this.addoredit.get('description')?.value, 
+    director: this.addoredit.get('director')?.value, 
+    photo: this.addoredit.get('photo')?.value, 
+    rating: 0, 
+    trailer: this.addoredit.get('trailer')?.value,
+    category: this.addoredit.get('getCategories')?.value,
+    year: this.addoredit.get('year')?.value,
+    id: this.itemId
+  }
+  this.itemsService.editItem(newMovie).subscribe()
+}
+
+deleteItem(item: ItemModel){
+  if(window.confirm("Are you sure you want to delete this movie?")){
+    this.itemsService.delete(item).subscribe()
+  }
+
+}
 }
 
 
