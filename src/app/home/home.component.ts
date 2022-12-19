@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
-import { ItemModel, ItemsService } from '../items.service';
-import { AuthService } from '../login-form/auth.service';
+import { ItemModel, ItemsService } from '../services/items.service';
+import { AuthService } from '../authentification/auth.service';
 
 
 @Component({
@@ -55,7 +55,7 @@ logout(): void{
   this.auth.signOut()
 }
 
-filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(startWith(''),debounceTime(100),
+filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(startWith(''),debounceTime(200),
     switchMap(searchValue => {
       return of(this.items).
         pipe(map(movies => {
@@ -77,8 +77,29 @@ addNewItem(){
     year: this.addoredit.get('year')?.value
   }
  
-  this.itemsService.createItem(newMovie).subscribe()
-  this.items.push(newMovie)
+  this.itemsService.createItem(newMovie).subscribe(()=>{
+this.filteredMovies = this.filteredMovies.pipe(tap(result =>{
+  result.push(newMovie)
+}
+  ))
+  })
+
+
+
+
+  
+  // this.items.push(newMovie)
+  this.itemsService.getItems().pipe(map((res: any) => {
+    const products = []
+    for(const key in res){
+      if(res.hasOwnProperty(key)){
+        products.push({...res[key], id: key})
+      }
+    }
+    return products
+  })).subscribe((res)=> {
+this.items = res;
+  })
   this.addoredit.reset()
 }
 
@@ -119,6 +140,11 @@ deleteItem(item: ItemModel){
     this.itemsService.delete(item).subscribe()
   }
 
+}
+
+getItem(item: ItemModel){
+  this.itemsService.getItem(item).subscribe(res => 
+    console.log(res))
 }
 }
 

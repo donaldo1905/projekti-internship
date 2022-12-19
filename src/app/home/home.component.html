@@ -28,9 +28,44 @@
     </div>
   </div>
 </nav>
+
+<div class="container-fluid py-5 flex-display">
+<div id="carouselExampleCaptions" class="carousel carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner d-flex">
+    <div class="carousel-item" *ngFor="let item of items | latest | slice: 0 : 3; let i = index" [ngClass]="i==0 ? 'carousel-item active': 'carousel-item'" data-bs-interval="2500">
+      <div class="movie_card_slider">
+        <div class="info_section_slider">
+          <div class="movie_header_slider">
+            <img class="locandina_slider" src="{{item.photo}}"/>
+            <h1>{{item.name}}</h1>
+            <h4>{{item.year}}, {{item.director}}</h4>
+            <span class="minutes_slider">{{item.runTime}} min</span>
+            <p class="type_slider">{{item.category}}</p>
+          </div><br>
+          <div class="movie_desc_slider">
+            <p class="text_slider">
+              {{item.description}}
+            </p>
+          </div>
+        </div>
+        <div class="blur_back_slider" style="background: url('{{item.photo}}'); background-size: cover;"></div>
+      </div>
+    </div>
+    
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div></div>
+
 <div class="container-fluid px-5" *ngIf="filteredMovies | async as items">
   <div class="row">
-    <div class="col-4" *ngFor="let item of items">
+    <div class="col-4" *ngFor="let item of items | latest; let i = index">
       <div class="movie_card">
         <div class="info_section">
           <div class="movie_header">
@@ -48,7 +83,7 @@
           <div class="movie_social">
             <ul>
               <li><i class="material-icons"></i></li>
-              <li><i class="material-icons">chat_bubble</i></li>
+              <li><i class="material-icons" (click)="getItem(item)">chat_bubble</i></li>
               <li><i class="material-icons" style="font-size:x-large;">star</i></li>
               <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong" (click)="itemToEdit(item); toggle = true">edit</i></li>
               <li><i class="material-icons" (click)="deleteItem(item)">delete</i></li>
@@ -113,8 +148,8 @@
         </div>
         <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add Category</button>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="addoredit.reset(); getCategories().controls = []; toggle == false">Close</button>
-        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="addNewItem()" *ngIf="!toggle">Add item</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="addoredit.reset(); getCategories().controls = []; toggle = false">Close</button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="addNewItem()" *ngIf="!toggle" [disabled]="!addoredit.valid">Add item</button>
         <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="editItem()" *ngIf="toggle">Save changes</button>
       </div>
     </form>

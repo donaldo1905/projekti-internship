@@ -15,9 +15,12 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { ShowMoreComponent } from './show-more/show-more.component';
 import {  HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptorService } from './auth-interceptor.service';
-import { AddEditComponent } from './home/add-edit/add-edit.component';
+import { AuthInterceptorService } from './authentification/auth-interceptor.service';
 import {MatSelectModule} from '@angular/material/select';
+import { LatestPipe } from './pipes/latest.pipe';
+import { AddOrEditFormComponent } from './shared/add-or-edit-form/add-or-edit-form.component';
+import { RatingComponent } from './shared/rating/rating.component';
+
 
 
 
@@ -29,7 +32,10 @@ import {MatSelectModule} from '@angular/material/select';
     LoginFormComponent,
     HomeComponent,
     ShowMoreComponent,
-    AddEditComponent,
+    LatestPipe,
+    AddOrEditFormComponent,
+    RatingComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,6 @@ import {MatSelectModule} from '@angular/material/select';
     HttpClientModule,
     MatIconModule,
     MatSelectModule,
-
     AngularFireModule.initializeApp(environment.firebase)
 
   ],
