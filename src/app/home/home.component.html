@@ -19,12 +19,7 @@
         </li>
      
       </ul>
-      <mat-icon>search</mat-icon>
-      <form class="d-flex" role="search">
-        <mat-form-field>
-          <input matInput type="search" placeholder="Search..." [formControl]="searchForm">
-        </mat-form-field>
-      </form>
+
     </div>
   </div>
 </nav>
@@ -48,7 +43,7 @@
             </p>
           </div>
         </div>
-        <div class="blur_back_slider" style="background: url('{{item.photo}}'); background-size: cover;"></div>
+        <div class="blur_back_slider" style="background: url('{{item.photo}}'); background-size:cover;"></div>
       </div>
     </div>
     
@@ -61,23 +56,54 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
+</div>
+<div class="filter">
+  <h2>Filter the movies:</h2>
+  <mat-form-field appearance="outline">
+    <mat-label>Categories</mat-label>
+    <mat-select [formControl]="categories" multiple>
+      <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="year">
+  <h3><b>Year:</b></h3>
+    <h3>{{startYear.value}}</h3>
+    <mat-slider min="1940" max="2022">
+      <input matSliderStartThumb [formControl]="startYear">
+      <input matSliderEndThumb [formControl]="endYear">
+    </mat-slider>
+    <h3>{{endYear.value}}</h3></div>
+  <div class="year">
+    <h3><b>Time:  </b></h3>
+    <h3>{{startTime.value}}</h3>
+    <mat-slider min="0" max="300">
+      <input matSliderStartThumb [formControl]="startTime">
+      <input matSliderEndThumb [formControl]="endTime">
+    </mat-slider>
+    <h3>{{endTime.value}}</h3></div>
+    <br>
+      <h2>Search by name:</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Search...</mat-label>
+        <input matInput [formControl]="searchForm">
+      </mat-form-field>
 </div></div>
-
-<div class="container-fluid px-5" *ngIf="filteredMovies | async as items">
+  <div class="container-fluid px-5" *ngIf="filteredByEndYear | async as items">
   <div class="row">
     <div class="col-4" *ngFor="let item of items | latest; let i = index">
-      <div class="movie_card">
+      <div class="movie_card h-80">
         <div class="info_section">
           <div class="movie_header">
             <img class="locandina" src='{{item.photo}}' />
             <h1>{{item.name}}</h1>
-            <h4>{{item.year}}, {{item.director}}</h4>
-            <span class="minutes">{{item.runTime}}</span>
+            <h4>{{item.year}}</h4>
+            <h4>{{item.director}}</h4>
+            <span class="minutes">{{item.runTime}} min</span>
             <p class="type">{{item.category}}</p>
           </div>
           <div class="movie_desc">
             <p class="text">
-              {{item.description}}
+              {{item.description | slice: 0 : 100}}...
             </p>
           </div>
           <div class="movie_social">

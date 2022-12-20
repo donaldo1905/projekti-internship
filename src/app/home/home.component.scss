@@ -38,7 +38,6 @@ mat-form-field{
 .movie_card{
   position: relative;
   width: 350px;
-  height: 350px;
   border-radius: 10px;
   transition: all 0.4s;
   box-shadow: 0px 15px 15px 0px rgb(171, 171, 171);
@@ -74,7 +73,6 @@ mat-form-field{
       }
       .type{
         display: inline-block;
-        color: #959595;
         margin-left: 10px;
       }
       .locandina{
@@ -142,7 +140,6 @@ mat-form-field{
     background-position: -100% 10% !important;  
   }
     .movie_card{
-        margin: 70px auto; 
         min-height: 350px;
         height: auto;
       }
@@ -282,7 +279,30 @@ mat-form-field{
 
 .flex-display {
   display: flex;
+  justify-content: space-evenly;
+  padding: 0 !important;
+}
+
+h3{
+  width: 100%;
+  margin: 0;
+  display: flex;
   justify-content: center;
+}
+
+mat-slider{
+ width: 80%;
+}
+
+.year{
+  display: flex;
+  justify-content: space-between;
+  place-items: center;
+}
+
+.filter{
+  padding: 75px 0;
+  width: 25%;
 }
 
 ::ng-deep .cdk-overlay-container{

@@ -3,6 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
 import { ItemModel, ItemsService } from '../services/items.service';
 import { AuthService } from '../authentification/auth.service';
+import { BehaviorSubject } from 'rxjs'
 
 
 @Component({
@@ -16,6 +17,13 @@ export class HomeComponent implements OnInit {
   toggle: boolean = false
   itemId?: string
   searchForm: FormControl = new FormControl()
+  categories: FormControl = new FormControl()
+  startYear: FormControl = new FormControl(1970)
+  endYear: FormControl = new FormControl(2022)
+  startTime: FormControl = new FormControl(100)
+  endTime: FormControl = new FormControl(300)
+  toppingList: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
+  currentList = new BehaviorSubject<number>(1970)
 constructor(private auth: AuthService, private itemsService: ItemsService){}
  
   ngOnInit(): void {
@@ -40,6 +48,7 @@ this.items = res;
       'description': new FormControl(null, Validators.required),
       'getCategories': new FormArray([], [Validators.required, Validators.maxLength(3)])
     })
+    this.currentList.subscribe(res => console.log(res))
   }
 
   getCategories(): FormArray {
@@ -62,6 +71,28 @@ filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(sta
           return movies.filter(movies => movies.name.toLowerCase().includes(searchValue))
         }))
     }))
+
+filteredByStartYear: Observable<ItemModel[]> = this.startYear?.valueChanges.pipe(startWith(this.startYear?.value),debounceTime(200),
+switchMap(searchValue => {
+  if(searchValue){
+  this.startYear.setValue(searchValue)}
+  return this.filteredMovies.
+    pipe(map(movies => {
+      return movies.filter(movies =>
+        movies.year >= searchValue
+        ) 
+    }))
+   
+}))  
+
+filteredByEndYear: Observable<ItemModel[]> = this.endYear?.valueChanges.pipe(startWith(2022),debounceTime(200),
+switchMap(searchValue => {
+  return this.filteredByStartYear.
+    pipe(map(movies => {
+      return movies.filter(movies => movies.year <= searchValue)
+    }))
+})) 
+
 
 addNewItem(){
   let newMovie: ItemModel = {
@@ -147,5 +178,7 @@ getItem(item: ItemModel){
     console.log(res))
 }
 }
+
+
 
 

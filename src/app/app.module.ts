@@ -9,11 +9,11 @@ import {MatButtonModule} from  '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatInputModule} from  '@angular/material/input';
 import {MatCardModule} from  '@angular/material/card';
+import {MatSliderModule} from  '@angular/material/slider';
 import {MatIconModule} from '@angular/material/icon'
 import { HomeComponent } from './home/home.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
-import { ShowMoreComponent } from './show-more/show-more.component';
 import {  HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from './authentification/auth-interceptor.service';
 import {MatSelectModule} from '@angular/material/select';
@@ -31,7 +31,6 @@ import { RatingComponent } from './shared/rating/rating.component';
     AppComponent,
     LoginFormComponent,
     HomeComponent,
-    ShowMoreComponent,
     LatestPipe,
     AddOrEditFormComponent,
     RatingComponent
@@ -41,6 +40,7 @@ import { RatingComponent } from './shared/rating/rating.component';
     BrowserModule,
     AppRoutingModule,
     MatButtonModule,
+    MatSliderModule,
     MatSlideToggleModule,
     MatCardModule,
   MatInputModule,
