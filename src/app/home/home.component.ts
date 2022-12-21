@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
 import { ItemModel, ItemsService } from '../services/items.service';
 import { AuthService } from '../authentification/auth.service';
 import { BehaviorSubject } from 'rxjs'
@@ -22,8 +22,9 @@ export class HomeComponent implements OnInit {
   endYear: FormControl = new FormControl(2022)
   startTime: FormControl = new FormControl(100)
   endTime: FormControl = new FormControl(300)
-  toppingList: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
+  categoriesOptions: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   currentList = new BehaviorSubject<number>(1970)
+  filterbytime: FormGroup = new FormGroup({})
 constructor(private auth: AuthService, private itemsService: ItemsService){}
  
   ngOnInit(): void {
@@ -48,7 +49,7 @@ this.items = res;
       'description': new FormControl(null, Validators.required),
       'getCategories': new FormArray([], [Validators.required, Validators.maxLength(3)])
     })
-    this.currentList.subscribe(res => console.log(res))
+  
   }
 
   getCategories(): FormArray {
@@ -72,10 +73,8 @@ filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(sta
         }))
     }))
 
-filteredByStartYear: Observable<ItemModel[]> = this.startYear?.valueChanges.pipe(startWith(this.startYear?.value),debounceTime(200),
+filteredByStartYear: Observable<ItemModel[]> = this.startYear?.valueChanges.pipe(distinctUntilChanged(),startWith(1970),debounceTime(100),
 switchMap(searchValue => {
-  if(searchValue){
-  this.startYear.setValue(searchValue)}
   return this.filteredMovies.
     pipe(map(movies => {
       return movies.filter(movies =>
@@ -85,14 +84,39 @@ switchMap(searchValue => {
    
 }))  
 
-filteredByEndYear: Observable<ItemModel[]> = this.endYear?.valueChanges.pipe(startWith(2022),debounceTime(200),
+filteredByEndYear: Observable<ItemModel[]> = this.endYear?.valueChanges.pipe(distinctUntilChanged(),startWith(2022),debounceTime(100),
 switchMap(searchValue => {
   return this.filteredByStartYear.
     pipe(map(movies => {
-      return movies.filter(movies => movies.year <= searchValue)
+      return movies.filter(movies => movies.year <= searchValue && movies.year >= this.startYear?.value)
     }))
 })) 
 
+filteredByStartTime: Observable<ItemModel[]> = this.startTime?.valueChanges.pipe(distinctUntilChanged(),startWith(100),debounceTime(100),
+switchMap(searchValue => {
+  return this.filteredByEndYear.
+    pipe(map(movies => {
+      return movies.filter(movies => movies.runTime >= searchValue && movies.runTime <= this.endTime?.value && movies.year <= this.endYear.value && movies.year >= this.startYear?.value)
+    }))
+})) 
+
+filteredByEndTime: Observable<ItemModel[]> = this.endTime?.valueChanges.pipe(distinctUntilChanged(),startWith(300),debounceTime(100),
+switchMap(searchValue => {
+  return this.filteredByStartTime.
+    pipe(map(movies => {
+      return movies.filter(movies => movies.runTime <= searchValue && movies.runTime >= this.startTime?.value && movies.year <= this.endYear.value && movies.year >= this.startYear?.value)
+    }))
+})) 
+
+finalFilter: Observable<ItemModel[]> = this.categories?.valueChanges.pipe(distinctUntilChanged(),startWith(''),debounceTime(100),
+switchMap(searchValue => {
+  if(searchValue){
+  return this.filteredByEndTime.
+    pipe(map(movies => {
+      return movies.filter(movies => movies.category.includes(searchValue) && movies.runTime <= this.endTime.value && movies.runTime >= this.startTime?.value && movies.year <= this.endYear.value && movies.year >= this.startYear?.value)
+    }))}
+    return this.filteredByEndTime.pipe(map(movies => {return movies}))
+})) 
 
 addNewItem(){
   let newMovie: ItemModel = {
@@ -115,11 +139,6 @@ this.filteredMovies = this.filteredMovies.pipe(tap(result =>{
   ))
   })
 
-
-
-
-  
-  // this.items.push(newMovie)
   this.itemsService.getItems().pipe(map((res: any) => {
     const products = []
     for(const key in res){

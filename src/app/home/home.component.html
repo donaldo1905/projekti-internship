@@ -1,105 +1,96 @@
 <nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
+  <div class="px-2 logo-align">
+    <img src="https://www.freepnglogos.com/uploads/film-reel-png/film-reel-the-movies-owens-valley-12.png"
+      style="width: 9%; margin: 10px;">
     <a class="navbar-brand">Movies2watch</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link">Log In</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" style="cursor: pointer;" (click)="logout()">Log Out</a>
-        </li>
-      
-        <li class="nav-item">
-          <a class="nav-link" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModalLong">Add Item</a>
-        </li>
-     
-      </ul>
-
-    </div>
+  </div>
+  <div class="logo-align">
+    <button color="primary" mat-button><i class="material-icons nav-icons">person</i></button>
+    <h2 style="margin:0">Welcome, Donaldo</h2>
+    <button color="warn" mat-button (click)="logout()"><i class="material-icons px-4 nav-icons">exit_to_app</i></button>
   </div>
 </nav>
 
 <div class="container-fluid py-5 flex-display">
-<div id="carouselExampleCaptions" class="carousel carousel-fade" data-bs-ride="carousel">
-  <div class="carousel-inner d-flex">
-    <div class="carousel-item" *ngFor="let item of items | latest | slice: 0 : 3; let i = index" [ngClass]="i==0 ? 'carousel-item active': 'carousel-item'" data-bs-interval="2500">
-      <div class="movie_card_slider">
-        <div class="info_section_slider">
-          <div class="movie_header_slider">
-            <img class="locandina_slider" src="{{item.photo}}"/>
-            <h1>{{item.name}}</h1>
-            <h4>{{item.year}}, {{item.director}}</h4>
-            <span class="minutes_slider">{{item.runTime}} min</span>
-            <p class="type_slider">{{item.category}}</p>
-          </div><br>
-          <div class="movie_desc_slider">
-            <p class="text_slider">
-              {{item.description}}
-            </p>
+  <div id="carouselExampleCaptions" class="carousel carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner d-flex">
+      <div class="carousel-item" *ngFor="let item of items | latest | slice: 0 : 3; let i = index"
+        [ngClass]="i==0 ? 'carousel-item active': 'carousel-item'" data-bs-interval="2500">
+        <div class="movie_card_slider">
+          <div class="info_section_slider">
+            <div class="movie_header_slider">
+              <img class="locandina_slider" src="{{item.photo}}" />
+              <h1>{{item.name}}</h1>
+              <h4>{{item.year}}, {{item.director}}</h4>
+              <span class="minutes_slider">{{item.runTime}} min</span>
+              <p class="type_slider">{{item.category}}</p>
+            </div><br>
+            <div class="movie_desc_slider">
+              <p class="text_slider">
+                {{item.description}}
+              </p>
+            </div>
           </div>
+          <div class="blur_back_slider" style="background: url('{{item.photo}}'); background-size:cover;"></div>
         </div>
-        <div class="blur_back_slider" style="background: url('{{item.photo}}'); background-size:cover;"></div>
       </div>
+
     </div>
-    
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-<div class="filter">
-  <h2>Filter the movies:</h2>
-  <mat-form-field appearance="outline">
-    <mat-label>Categories</mat-label>
-    <mat-select [formControl]="categories" multiple>
-      <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div class="year">
-  <h3><b>Year:</b></h3>
-    <h3>{{startYear.value}}</h3>
-    <mat-slider min="1940" max="2022">
-      <input matSliderStartThumb [formControl]="startYear">
-      <input matSliderEndThumb [formControl]="endYear">
-    </mat-slider>
-    <h3>{{endYear.value}}</h3></div>
-  <div class="year">
-    <h3><b>Time:  </b></h3>
-    <h3>{{startTime.value}}</h3>
-    <mat-slider min="0" max="300">
-      <input matSliderStartThumb [formControl]="startTime">
-      <input matSliderEndThumb [formControl]="endTime">
-    </mat-slider>
-    <h3>{{endTime.value}}</h3></div>
+  <div class="filter">
+    <h2>Filter the movies:</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Categories</mat-label>
+      <mat-select [formControl]="categories">
+        <mat-option *ngFor="let category of categoriesOptions" [value]="category">{{category}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="year">
+      <h3><b>Year:</b></h3>
+      <h3>{{startYear.value}}</h3>
+      <mat-slider min="1940" max="2022">
+        <input matSliderStartThumb [formControl]="startYear">
+        <input matSliderEndThumb [formControl]="endYear">
+      </mat-slider>
+      <h3>{{endYear.value}}</h3>
+    </div>
+    <div class="year">
+      <h3><b>Time: </b></h3>
+      <h3>{{startTime.value}}</h3>
+      <mat-slider min="0" max="300">
+        <input matSliderStartThumb [formControl]="startTime">
+        <input matSliderEndThumb [formControl]="endTime">
+      </mat-slider>
+      <h3>{{endTime.value}}</h3>
+    </div>
     <br>
-      <h2>Search by name:</h2>
-      <mat-form-field appearance="outline">
-        <mat-label>Search...</mat-label>
-        <input matInput [formControl]="searchForm">
-      </mat-form-field>
-</div></div>
-  <div class="container-fluid px-5" *ngIf="filteredByEndYear | async as items">
+    <h2>Search by name:</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Search...</mat-label>
+      <input matInput [formControl]="searchForm">
+    </mat-form-field>
+  </div>
+</div>
+<div class="container-fluid px-5" *ngIf="finalFilter | async as items">
   <div class="row">
     <div class="col-4" *ngFor="let item of items | latest; let i = index">
-      <div class="movie_card h-80">
+      <div class="movie_card h-100">
         <div class="info_section">
           <div class="movie_header">
             <img class="locandina" src='{{item.photo}}' />
-            <h1>{{item.name}}</h1>
-            <h4>{{item.year}}</h4>
-            <h4>{{item.director}}</h4>
-            <span class="minutes">{{item.runTime}} min</span>
-            <p class="type">{{item.category}}</p>
+            <div>
+              <h1>{{item.name}}</h1>
+              <h4>{{item.year}} | {{item.runTime}} min</h4>
+              <span>{{item.category}}</span>
+            </div>
           </div>
           <div class="movie_desc">
             <p class="text">
@@ -111,7 +102,8 @@
               <li><i class="material-icons"></i></li>
               <li><i class="material-icons" (click)="getItem(item)">chat_bubble</i></li>
               <li><i class="material-icons" style="font-size:x-large;">star</i></li>
-              <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong" (click)="itemToEdit(item); toggle = true">edit</i></li>
+              <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong"
+                  (click)="itemToEdit(item); toggle = true">edit</i></li>
               <li><i class="material-icons" (click)="deleteItem(item)">delete</i></li>
             </ul>
           </div>
@@ -121,7 +113,8 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="exampleModalLong" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="exampleModalLong" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-center" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -129,58 +122,63 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="addoredit">
-        <mat-form-field appearance="fill">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Director</mat-label>
-          <input matInput formControlName="director">
-        </mat-form-field>
-        <div class="inline">
-        <mat-form-field appearance="fill">
-          <mat-label>Year</mat-label>
-          <input matInput type="number" formControlName="year">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>RunTime</mat-label>
-          <input matInput type="number" formControlName="runtime">
-        </mat-form-field></div>
-        <mat-form-field appearance="fill">
-          <mat-label>Photo</mat-label>
-          <input matInput formControlName="photo">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Trailer</mat-label>
-          <input matInput formControlName="trailer">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description"></textarea>
-        </mat-form-field>
-        <div formArrayName="getCategories" [ngClass]="getCategories().length < 2 ? 'block' : 'inline' ">
-        <mat-form-field appearance="fill" *ngFor="let photo of getCategories()?.controls; let i = index">
-          <mat-label>Category</mat-label>
-          <mat-select [formControlName]="i">
-            <mat-option value="action">Action</mat-option>
-            <mat-option value="horror">Horror</mat-option>
-            <mat-option value="comedy">Comedy</mat-option>
-            <mat-option value="thriller">Thriller</mat-option>
-            <mat-option value="drama">Drama</mat-option>
-            <mat-option value="fantasy">Fantasy</mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-        </div>
-        <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add Category</button>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="addoredit.reset(); getCategories().controls = []; toggle = false">Close</button>
-        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="addNewItem()" *ngIf="!toggle" [disabled]="!addoredit.valid">Add item</button>
-        <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="editItem()" *ngIf="toggle">Save changes</button>
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Director</mat-label>
+            <input matInput formControlName="director">
+          </mat-form-field>
+          <div class="inline">
+            <mat-form-field appearance="fill">
+              <mat-label>Year</mat-label>
+              <input matInput type="number" formControlName="year">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>RunTime</mat-label>
+              <input matInput type="number" formControlName="runtime">
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="fill">
+            <mat-label>Photo</mat-label>
+            <input matInput formControlName="photo">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Trailer</mat-label>
+            <input matInput formControlName="trailer">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>
+          <div formArrayName="getCategories" [ngClass]="getCategories().length < 2 ? 'block' : 'inline' ">
+            <mat-form-field appearance="fill" *ngFor="let photo of getCategories()?.controls; let i = index">
+              <mat-label>Category</mat-label>
+              <mat-select [formControlName]="i">
+                <mat-option value="action">Action</mat-option>
+                <mat-option value="horror">Horror</mat-option>
+                <mat-option value="comedy">Comedy</mat-option>
+                <mat-option value="thriller">Thriller</mat-option>
+                <mat-option value="drama">Drama</mat-option>
+                <mat-option value="fantasy">Fantasy</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+          <button class="btn btn-primary" type="button" (click)="onCategories()" *ngIf="getCategories().length < 3">Add
+            Category</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+              (click)="addoredit.reset(); getCategories().controls = []; toggle = false">Close</button>
+            <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="addNewItem()" *ngIf="!toggle"
+              [disabled]="!addoredit.valid">Add item</button>
+            <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="editItem()" *ngIf="toggle">Save
+              changes</button>
+          </div>
+        </form>
       </div>
-    </form>
-      </div>
-      
+
     </div>
   </div>
 </div>

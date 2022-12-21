@@ -13,10 +13,30 @@ html, body{
   font-weight: 400;
 }
 
+.col-4{
+  padding-bottom: 40px;
+}
+.logo-align {
+  display: flex;
+    align-items: center;
+} 
+
+.nav-icons{
+  font-size: xx-large;
+  padding-right: 0 !important;
+}
+
 nav{
   box-shadow: 0px 3px 15px 0px rgb(201, 201, 201);
   background-color: rgb(244, 244, 244);
   height: 65px;
+  justify-content: space-between;
+  button{
+   min-width: 40px;
+  }
+}
+.navbar-brand {
+  font-size: 27px;
 }
 
 mat-icon{
@@ -38,6 +58,7 @@ mat-form-field{
 .movie_card{
   position: relative;
   width: 350px;
+  height: 60%;
   border-radius: 10px;
   transition: all 0.4s;
   box-shadow: 0px 15px 15px 0px rgb(171, 171, 171);
@@ -52,7 +73,8 @@ mat-form-field{
     z-index: 2;
     border-radius: 10px;
     .movie_header{
-      position: relative;
+      display: flex;
+      justify-content: flex-start;
       padding: 25px;
       height: 40%;
       h1{
@@ -76,10 +98,9 @@ mat-form-field{
         margin-left: 10px;
       }
       .locandina{
-        position: relative;
-        float: left;
         margin-right: 20px;
-        height: 120px;
+        height: 140px;
+    width: 100px;
       }
     }
     .movie_desc{
