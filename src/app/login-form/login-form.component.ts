@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AuthService } from '../authentification/auth.service';
+import { AuthService, User } from '../authentification/auth.service';
 
 
 @Component({
@@ -31,6 +31,7 @@ ngOnInit(): void {
   this.registerForm.addValidators(
     this.matchValidator(this.registerForm.get('registerPassword')!, this.registerForm.get('confirmPassword')!)
   );
+
 }
 
 matchValidator(
@@ -49,7 +50,23 @@ login(){
 }
 
 register(){
+  let newUser = {firstName: this.registerForm.get('firstName')!.value, 
+  lastName: this.registerForm.get('lastName')!.value,
+  ratings: [],
+  email: this.registerForm.get('registerEmail')!.value,
+  savedMovies: []
+}
   this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value)
+}
+
+registerUser(){
+  let newUser = {firstName: this.registerForm.get('firstName')!.value, 
+  lastName: this.registerForm.get('lastName')!.value,
+  ratings: [],
+  email: this.registerForm.get('registerEmail')!.value,
+  savedMovies: []
+}
+this.auth.registerUser(newUser).subscribe()
 }
 
 }

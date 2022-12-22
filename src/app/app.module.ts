@@ -20,6 +20,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { LatestPipe } from './pipes/latest.pipe';
 import { AddOrEditFormComponent } from './shared/add-or-edit-form/add-or-edit-form.component';
 import { RatingComponent } from './shared/rating/rating.component';
+import { DetailedPageComponent } from './detailed-page/detailed-page.component';
+import { SafePipe } from './pipes/safe-pipe.pipe';
 
 
 
@@ -33,7 +35,9 @@ import { RatingComponent } from './shared/rating/rating.component';
     HomeComponent,
     LatestPipe,
     AddOrEditFormComponent,
-    RatingComponent
+    RatingComponent,
+    DetailedPageComponent,
+    SafePipe
     
   ],
   imports: [

@@ -83,7 +83,7 @@
   <div class="row">
     <div class="col-4" *ngFor="let item of items | latest; let i = index">
       <div class="movie_card h-100">
-        <div class="info_section">
+        <div class="info_section" [routerLink]="['/details', item.id]">
           <div class="movie_header">
             <img class="locandina" src='{{item.photo}}' />
             <div>
@@ -98,13 +98,12 @@
             </p>
           </div>
           <div class="movie_social">
-            <ul>
+            <ul >
               <li><i class="material-icons"></i></li>
               <li><i class="material-icons" (click)="getItem(item)">chat_bubble</i></li>
               <li><i class="material-icons" style="font-size:x-large;">star</i></li>
               <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong"
-                  (click)="itemToEdit(item); toggle = true">edit</i></li>
-              <li><i class="material-icons" (click)="deleteItem(item)">delete</i></li>
+                  (click)="itemToEdit(item, $event)">edit</i></li>
             </ul>
           </div>
         </div>
@@ -182,3 +181,4 @@
     </div>
   </div>
 </div>
+<router-outlet></router-outlet>

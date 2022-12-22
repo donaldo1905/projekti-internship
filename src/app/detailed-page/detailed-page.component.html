@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="px-2 logo-align">
+        <img src="https://www.freepnglogos.com/uploads/film-reel-png/film-reel-the-movies-owens-valley-12.png"
+            style="width: 9%; margin: 10px;">
+        <a class="navbar-brand">Movies2watch</a>
+    </div>
+    <div class="logo-align">
+        <button color="primary" mat-button><i class="material-icons nav-icons">person</i></button>
+        <h2 style="margin:0">Welcome, Donaldo</h2>
+        <button color="warn" mat-button><i class="material-icons px-4 nav-icons">exit_to_app</i></button>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <img [src]="item?.photo" style="height: 83vh; width: 90%;">
+        </div>
+        <div class="col-8">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-5 text-center">
+                        <h1><b>{{item?.name}}</b></h1>
+                        <br><br>
+                        <h3><b>Director: </b>{{item?.director}}</h3>
+                        <h3><b>Release Year: </b>{{item?.year}}</h3>
+                        <h3><b>Runtime: </b>{{item?.runTime}}</h3>
+                        <h3><b>Categories: </b>{{item?.category}}</h3>
+                        <h3><b>Rating: </b>{{item?.rating}}</h3>
+                    </div>
+                    <div class="col-7"><iframe width="420" height="315" [src]="trailer! | safe"></iframe></div>
+                </div>
+            </div>
+            <br>
+            <p class="description">{{item?.description}}</p>
+        </div>
+    </div>
+</div>
+<br>

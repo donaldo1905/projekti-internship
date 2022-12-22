@@ -31,8 +31,8 @@ export class ItemsService {
     return this.http.get<ItemModel[]>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items.json")
   }
 
-  getItem(item: ItemModel):  Observable<ItemModel>{
-    return this.http.get<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+item.id+".json")
+  getItem(id: String):  Observable<ItemModel>{
+    return this.http.get<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json")
   }
 
   editItem(item: ItemModel): Observable<ItemModel>{

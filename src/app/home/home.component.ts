@@ -4,6 +4,7 @@ import { debounceTime, distinctUntilChanged, filter, map, Observable, of, startW
 import { ItemModel, ItemsService } from '../services/items.service';
 import { AuthService } from '../authentification/auth.service';
 import { BehaviorSubject } from 'rxjs'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class HomeComponent implements OnInit {
   categoriesOptions: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   currentList = new BehaviorSubject<number>(1970)
   filterbytime: FormGroup = new FormGroup({})
-constructor(private auth: AuthService, private itemsService: ItemsService){}
+constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router){}
  
   ngOnInit(): void {
     this.itemsService.getItems().pipe(map((res: any) => {
@@ -153,7 +154,7 @@ this.items = res;
   this.addoredit.reset()
 }
 
-itemToEdit(item: ItemModel){
+itemToEdit(item: ItemModel, e:Event){
   this.addoredit.get('name')?.setValue(item.name)
   this.addoredit.get('director')?.setValue(item.director)
   this.addoredit.get('year')?.setValue(item.year)
@@ -165,7 +166,9 @@ itemToEdit(item: ItemModel){
     const control = new FormControl(category,[Validators.required, Validators.maxLength(3)]);
     (<FormArray>this.addoredit.get('getCategories')).push(control)
   }
+  this.router.navigate(['/addoredit'])
   this.itemId = item.id
+  e.stopPropagation()
 }
 
 editItem(){
@@ -193,9 +196,10 @@ deleteItem(item: ItemModel){
 }
 
 getItem(item: ItemModel){
-  this.itemsService.getItem(item).subscribe(res => 
+  this.itemsService.getItem(item.id!).subscribe(res => 
     console.log(res))
 }
+
 }
 
 

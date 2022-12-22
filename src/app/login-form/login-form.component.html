@@ -72,7 +72,7 @@
 </div>
 
   <div class="button">
-    <button type="submit" mat-button [disabled]="!registerForm.valid" (click)="register()">Register</button>
+    <button type="submit" mat-button [disabled]="!registerForm.valid" (click)="register(); registerUser()">Register</button>
   </div>
   <a (click)="toggle = false" style="cursor: pointer;color: blue;">Already Registered? Log In Here.</a>
 </form>
