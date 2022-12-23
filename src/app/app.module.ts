@@ -22,6 +22,7 @@ import { AddOrEditFormComponent } from './shared/add-or-edit-form/add-or-edit-fo
 import { RatingComponent } from './shared/rating/rating.component';
 import { DetailedPageComponent } from './detailed-page/detailed-page.component';
 import { SafePipe } from './pipes/safe-pipe.pipe';
+import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
 
 
 
@@ -37,7 +38,8 @@ import { SafePipe } from './pipes/safe-pipe.pipe';
     AddOrEditFormComponent,
     RatingComponent,
     DetailedPageComponent,
-    SafePipe
+    SafePipe,
+    SavedMoviesComponent
     
   ],
   imports: [

@@ -50,23 +50,16 @@ login(){
 }
 
 register(){
-  let newUser = {firstName: this.registerForm.get('firstName')!.value, 
+  let newUser: User = {firstName: this.registerForm.get('firstName')!.value, 
   lastName: this.registerForm.get('lastName')!.value,
   ratings: [],
   email: this.registerForm.get('registerEmail')!.value,
-  savedMovies: []
+  savedMovies: [],
+  role: 'user'
 }
-  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value)
+  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value, newUser)
 }
 
-registerUser(){
-  let newUser = {firstName: this.registerForm.get('firstName')!.value, 
-  lastName: this.registerForm.get('lastName')!.value,
-  ratings: [],
-  email: this.registerForm.get('registerEmail')!.value,
-  savedMovies: []
-}
-this.auth.registerUser(newUser).subscribe()
-}
+
 
 }

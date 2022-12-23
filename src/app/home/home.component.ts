@@ -2,9 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, startWith, switchMap, take, tap, windowWhen } from 'rxjs';
 import { ItemModel, ItemsService } from '../services/items.service';
-import { AuthService } from '../authentification/auth.service';
+import { AuthService, User } from '../authentification/auth.service';
 import { BehaviorSubject } from 'rxjs'
-import { Router } from '@angular/router';
+import { Router, UrlSerializer } from '@angular/router';
 
 
 @Component({
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
   categoriesOptions: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   currentList = new BehaviorSubject<number>(1970)
   filterbytime: FormGroup = new FormGroup({})
+  activeUser: User = JSON.parse(localStorage.getItem('user')!)
 constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router){}
  
   ngOnInit(): void {
@@ -199,6 +200,26 @@ getItem(item: ItemModel){
   this.itemsService.getItem(item.id!).subscribe(res => 
     console.log(res))
 }
+
+addToSavedMovies(movie: ItemModel){
+    this.auth.getUser(this.activeUser.id!).subscribe(user => {
+        if (user.savedMovies && !user.savedMovies!.includes(movie)) {
+          user.savedMovies.push(movie)
+        }
+        else
+        if(user.savedMovies.includes(movie)){
+          user.savedMovies = user.savedMovies
+        }else
+       if(!user.savedMovies) {
+        user.savedMovies = [movie]
+      }
+      this.auth.editUser(user).subscribe()
+    }
+      
+    )
+
+
+  }
 
 }
 
