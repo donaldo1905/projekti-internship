@@ -26,9 +26,6 @@ import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
 
 
 
-
-
-
 @NgModule({
   declarations: [
     AppComponent,

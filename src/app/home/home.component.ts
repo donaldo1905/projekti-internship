@@ -5,6 +5,7 @@ import { ItemModel, ItemsService } from '../services/items.service';
 import { AuthService, User } from '../authentification/auth.service';
 import { BehaviorSubject } from 'rxjs'
 import { Router, UrlSerializer } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 @Component({
@@ -26,8 +27,8 @@ export class HomeComponent implements OnInit {
   categoriesOptions: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   currentList = new BehaviorSubject<number>(1970)
   filterbytime: FormGroup = new FormGroup({})
-  activeUser: User = JSON.parse(localStorage.getItem('user')!)
-constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router){}
+  activeUser: any;
+constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router, private fireStore: AngularFirestore){}
  
   ngOnInit(): void {
     this.itemsService.getItems().pipe(map((res: any) => {
@@ -51,7 +52,7 @@ this.items = res;
       'description': new FormControl(null, Validators.required),
       'getCategories': new FormArray([], [Validators.required, Validators.maxLength(3)])
     })
-  
+    this.fireStore.collection('users').doc(localStorage.getItem('id')!).valueChanges().subscribe(user => this.activeUser = user)
   }
 
   getCategories(): FormArray {
@@ -201,25 +202,12 @@ getItem(item: ItemModel){
     console.log(res))
 }
 
-addToSavedMovies(movie: ItemModel){
-    this.auth.getUser(this.activeUser.id!).subscribe(user => {
-        if (user.savedMovies && !user.savedMovies!.includes(movie)) {
-          user.savedMovies.push(movie)
-        }
-        else
-        if(user.savedMovies.includes(movie)){
-          user.savedMovies = user.savedMovies
-        }else
-       if(!user.savedMovies) {
-        user.savedMovies = [movie]
-      }
-      this.auth.editUser(user).subscribe()
-    }
-      
-    )
+addToSavedList(item: ItemModel){
+  this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).valueChanges().pipe(take(1),tap(user => {
+this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({savedMovies: item})
+  }))
+}
 
-
-  }
 
 }
 

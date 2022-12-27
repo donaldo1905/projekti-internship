@@ -6,7 +6,7 @@
   </div>
   <div class="logo-align">
     <button color="primary" mat-button><i class="material-icons nav-icons">person</i></button>
-    <h2 style="margin:0">Welcome, {{activeUser.firstName}}</h2>
+    <h2 style="margin:0">Welcome, {{activeUser?.firstName}}</h2>
     <button color="warn" mat-button (click)="logout()"><i class="material-icons px-4 nav-icons">exit_to_app</i></button>
   </div>
 </nav>
@@ -99,11 +99,8 @@
           </div>
           <div class="movie_social">
             <ul >
-              <li><i class="material-icons" (click)="addToSavedMovies(item)"></i></li>
-              <li><i class="material-icons" (click)="getItem(item)">chat_bubble</i></li>
-              <li><i class="material-icons" style="font-size:x-large;">star</i></li>
-              <li><i class="material-icons" data-toggle="modal" data-target="#exampleModalLong"
-                  (click)="itemToEdit(item, $event)">edit</i></li>
+              <li><i class="material-icons" style="font-size:x-large;" (click)="addToSavedList(item)"></i></li>
+              <li><i class="material-icons" style="font-size:x-large;" [routerLink]="['/details', item.id]">more_vert</i></li>
             </ul>
           </div>
         </div>

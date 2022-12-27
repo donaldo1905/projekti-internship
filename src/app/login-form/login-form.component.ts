@@ -50,14 +50,15 @@ login(){
 }
 
 register(){
-  let newUser: User = {firstName: this.registerForm.get('firstName')!.value, 
+  let userData: User = {
+  firstName: this.registerForm.get('firstName')!.value, 
   lastName: this.registerForm.get('lastName')!.value,
   ratings: [],
-  email: this.registerForm.get('registerEmail')!.value,
   savedMovies: [],
   role: 'user'
 }
-  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value, newUser)
+  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value)
+ setTimeout(()=> {this.auth.update(userData)}, 2000) 
 }
 
 

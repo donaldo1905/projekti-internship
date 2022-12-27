@@ -12,7 +12,7 @@ export class SavedMoviesComponent implements OnInit {
 constructor(private auth: AuthService){}
   ngOnInit(): void {
    let activeUser: User = JSON.parse(localStorage.getItem('user')!)
-this.auth.getUser(activeUser.id!).subscribe(user => {
+this.auth.getUser(activeUser.uid!).subscribe(user => {
   console.log(user.savedMovies)
 this.savedItems = user.savedMovies
 })
