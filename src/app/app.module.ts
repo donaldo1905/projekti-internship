@@ -23,7 +23,8 @@ import { RatingComponent } from './shared/rating/rating.component';
 import { DetailedPageComponent } from './detailed-page/detailed-page.component';
 import { SafePipe } from './pipes/safe-pipe.pipe';
 import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
-
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { MatTableModule } from '@angular/material/table'
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
     RatingComponent,
     DetailedPageComponent,
     SafePipe,
-    SavedMoviesComponent
+    SavedMoviesComponent,
+    AdminPageComponent
     
   ],
   imports: [
@@ -51,6 +53,7 @@ import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
   ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatTableModule,
     MatIconModule,
     MatSelectModule,
     AngularFireModule.initializeApp(environment.firebase)

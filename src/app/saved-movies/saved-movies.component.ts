@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService, User } from '../authentification/auth.service';
-import { ItemModel } from '../services/items.service';
+
 
 @Component({
   selector: 'app-saved-movies',
@@ -8,13 +9,9 @@ import { ItemModel } from '../services/items.service';
   styleUrls: ['./saved-movies.component.scss']
 })
 export class SavedMoviesComponent implements OnInit {
-  savedItems!: ItemModel[]
-constructor(private auth: AuthService){}
+  activeUser?: User;
+constructor(private auth: AuthService, private fireStore: AngularFirestore){}
   ngOnInit(): void {
-   let activeUser: User = JSON.parse(localStorage.getItem('user')!)
-this.auth.getUser(activeUser.uid!).subscribe(user => {
-  console.log(user.savedMovies)
-this.savedItems = user.savedMovies
-})
+    this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).valueChanges().subscribe(user => this.activeUser = user)
   }
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 import { DetailedPageComponent } from './detailed-page/detailed-page.component';
 import { HomeComponent } from './home/home.component';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -10,9 +11,11 @@ const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
   {path: 'login', component: LoginFormComponent},
-  {path: 'addoredit', component: AddOrEditFormComponent},
   {path: 'details/:id', component: DetailedPageComponent},
-  {path: 'savedmovies', component: SavedMoviesComponent}
+  {path: 'savedmovies', component: SavedMoviesComponent},
+  {path: 'admin', component: AdminPageComponent, children:[
+     {path: 'addoredit/:id', component: AddOrEditFormComponent},
+  ]}
 ];
 
 @NgModule({

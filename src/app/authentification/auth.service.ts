@@ -62,17 +62,13 @@ export class AuthService {
     this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({firstName: user.firstName, lastName: user.lastName, role: user.role, ratings: user.ratings, savedMovies: user.savedMovies})
   }
 
-  editUser(user: User): Observable<User>{
-    return this.http.patch<User>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/users/"+user.uid+".json", user)
+  getUsers(){
+   return this.fireStore.collection('users').valueChanges()
   }
 
-  getUsers(): Observable<User>{
-  return this.http.get<User>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/users.json")
+  deleteUser(user: User){
+    return this.fireStore.collection('users').doc(user.uid).delete()
   }
-
-  getUser(id: string): Observable<User>{
-    return this.http.get<User>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/users/"+id+".json")
-    }
 
   signOut(){
     this.fireAuth.signOut().then( () => {

@@ -156,7 +156,7 @@ this.items = res;
   this.addoredit.reset()
 }
 
-itemToEdit(item: ItemModel, e:Event){
+itemToEdit(item: ItemModel){
   this.addoredit.get('name')?.setValue(item.name)
   this.addoredit.get('director')?.setValue(item.director)
   this.addoredit.get('year')?.setValue(item.year)
@@ -170,7 +170,7 @@ itemToEdit(item: ItemModel, e:Event){
   }
   this.router.navigate(['/addoredit'])
   this.itemId = item.id
-  e.stopPropagation()
+  
 }
 
 editItem(){
@@ -203,9 +203,22 @@ getItem(item: ItemModel){
 }
 
 addToSavedList(item: ItemModel){
-  this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).valueChanges().pipe(take(1),tap(user => {
-this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({savedMovies: item})
-  }))
+  this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get().subscribe(user => {
+    if(!user.data()?.savedMovies && !user.data()?.savedMovies?.length){
+      this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({savedMovies: [item]})
+    }
+    else {
+      let check = false
+      for(let movie of user.data()!.savedMovies){
+        if(item.id === movie.id){
+          check = true
+        }
+      }
+      if(!check){
+        this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({savedMovies: [...user.data()!.savedMovies, item]})
+      }
+    
+}})
 }
 
 

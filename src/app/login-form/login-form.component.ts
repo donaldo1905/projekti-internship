@@ -58,7 +58,7 @@ register(){
   role: 'user'
 }
   this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value)
- setTimeout(()=> {this.auth.update(userData)}, 2000) 
+ setTimeout(()=> {this.auth.update(userData)}, 1000) 
 }
 
 
