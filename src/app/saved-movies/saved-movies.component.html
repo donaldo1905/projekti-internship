@@ -30,7 +30,7 @@
         </div>
         <div class="movie_social">
           <ul >
-            <li><i class="material-icons" style="font-size:x-large;">delete</i></li>
+            <li><i class="material-icons" style="font-size:x-large;" (click)="remove(item)">delete</i></li>
             <li><i class="material-icons" style="font-size:x-large;" [routerLink]="['/details', item.id]">more_vert</i></li>
           </ul>
         </div>

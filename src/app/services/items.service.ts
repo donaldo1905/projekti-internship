@@ -35,8 +35,8 @@ export class ItemsService {
     return this.http.get<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json")
   }
 
-  editItem(item: ItemModel): Observable<ItemModel>{
-    return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+item.id+".json", item)
+  editItem(id: string, item: ItemModel): Observable<ItemModel>{
+    return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json", item)
   }
 
   delete(item: ItemModel): Observable<ItemModel>{

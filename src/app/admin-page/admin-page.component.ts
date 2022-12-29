@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { map } from 'rxjs';
+import { Router } from '@angular/router';
+import { findIndex, map, take, tap } from 'rxjs';
 import { AuthService, User } from '../authentification/auth.service';
 import { ItemModel, ItemsService } from '../services/items.service';
 
@@ -16,7 +17,8 @@ export class AdminPageComponent implements OnInit{
   displayedItemColumns: string[] = ['name', 'director', 'year', 'id', 'edit', 'delete'];
   dataSource: any;
   itemsSource: any;
-  constructor(private itemsService: ItemsService, private auth: AuthService){}
+  constructor(private itemsService: ItemsService, private auth: AuthService, private router: Router){}
+ 
   ngOnInit(): void {
     this.auth.getUsers().subscribe((res: any) => {
       for(let user of res){
@@ -37,9 +39,19 @@ export class AdminPageComponent implements OnInit{
       return products
     })).subscribe((res)=> {
       this.itemsSource = new MatTableDataSource<User[]>(res)
+      this.itemsSource!.filterPredicate = function(data: any, filter: string): boolean{
+      return data.name.toLowerCase().includes(filter)
+    }
     })
+    
   }
   
+  deleteItem(item: ItemModel){
+    if(window.confirm('Are you sure you want to delete this item?')){
+    this.itemsService.delete(item).subscribe()
+     this.itemsSource.data.splice(this.itemsSource.data.indexOf(item), 1)
+     this.itemsSource._updateChangeSubscription()
+  }}
 
   applyItemFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -49,10 +61,6 @@ export class AdminPageComponent implements OnInit{
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  deleteUser(user: User){
-    this.auth.deleteUser(user).then()
   }
 
 }

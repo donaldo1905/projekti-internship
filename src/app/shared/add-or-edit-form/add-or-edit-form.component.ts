@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ItemModel, ItemsService } from 'src/app/services/items.service';
 
 @Component({
@@ -10,8 +11,9 @@ import { ItemModel, ItemsService } from 'src/app/services/items.service';
 export class AddOrEditFormComponent implements OnInit {
   toppingList: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   addoredit: FormGroup = new FormGroup({})
+  id = this.route.snapshot.params['id']
 
-  constructor(private itemsService: ItemsService){}
+  constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router){}
   ngOnInit(): void {
     this.addoredit = new FormGroup({
       'name': new FormControl(null, Validators.required),
@@ -23,6 +25,36 @@ export class AddOrEditFormComponent implements OnInit {
       'description': new FormControl(null, Validators.required),
       'categories': new FormControl(null, Validators.required)
     })
+    if(this.route.snapshot.params['id'] !== 'add'){
+      this.itemsService.getItem(this.route.snapshot.params['id']).subscribe( res => {
+        this.addoredit.get('name')?.setValue(res.name)
+        this.addoredit.get('director')?.setValue(res.director)
+        this.addoredit.get('year')?.setValue(res.year)
+        this.addoredit.get('runtime')?.setValue(res.runTime)
+        this.addoredit.get('photo')?.setValue(res.photo)
+        this.addoredit.get('trailer')?.setValue(res.trailer)
+        this.addoredit.get('description')?.setValue(res.description)
+        this.addoredit.get('categories')?.setValue(res.category)
+      }
+      )
+    }
+  }
+
+  editItem(){
+    let edittedMovie: ItemModel = {
+      name: this.addoredit.get('name')?.value, 
+      runTime: this.addoredit.get('runtime')?.value,
+      comments: [], 
+      description: this.addoredit.get('description')?.value, 
+      director: this.addoredit.get('director')?.value, 
+      photo: this.addoredit.get('photo')?.value, 
+      rating: 0, 
+      trailer: this.addoredit.get('trailer')?.value,
+      category: this.addoredit.get('categories')?.value,
+      year: this.addoredit.get('year')?.value
+    }
+    this.itemsService.editItem(this.route.snapshot.params['id'], edittedMovie).subscribe()
+    this.router.navigate(['/admin'])
   }
 
   addNewItem(){
@@ -38,7 +70,7 @@ export class AddOrEditFormComponent implements OnInit {
       category: this.addoredit.get('categories')?.value,
       year: this.addoredit.get('year')?.value
     }
-   
     this.itemsService.createItem(newMovie).subscribe()
+    this.router.navigate(['/admin'])
     }
 }

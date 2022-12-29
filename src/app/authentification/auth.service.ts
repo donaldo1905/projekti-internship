@@ -66,10 +66,6 @@ export class AuthService {
    return this.fireStore.collection('users').valueChanges()
   }
 
-  deleteUser(user: User){
-    return this.fireStore.collection('users').doc(user.uid).delete()
-  }
-
   signOut(){
     this.fireAuth.signOut().then( () => {
       localStorage.clear()
