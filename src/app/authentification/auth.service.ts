@@ -62,6 +62,10 @@ export class AuthService {
     this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({firstName: user.firstName, lastName: user.lastName, role: user.role, ratings: user.ratings, savedMovies: user.savedMovies})
   }
 
+  getUser(){
+    return this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get()
+  }
+
   getUsers(){
    return this.fireStore.collection('users').valueChanges()
   }
