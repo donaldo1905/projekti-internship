@@ -63,7 +63,7 @@ export class AuthService {
   }
 
   getUser(){
-    return this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get()
+    return this.fireStore.collection('users').doc(localStorage.getItem('id')!).valueChanges()
   }
 
   getUsers(){

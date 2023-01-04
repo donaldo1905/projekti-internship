@@ -14,9 +14,9 @@ export class AdminGuardGuard implements CanActivate {
       if(!localStorage.getItem('id')){
         this.router.navigate(['/login'])
         return false
-      }else 
+      }else
       this.auth.getUser().subscribe( (res: any) => {
-        if(res.data()?.role === 'admin'){
+        if(res.role === 'admin'){
           return true
         }else
         this.router.navigate(['/home'])

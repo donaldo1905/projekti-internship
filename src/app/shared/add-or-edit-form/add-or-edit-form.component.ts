@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
+import { AuthService, User } from 'src/app/authentification/auth.service';
 import { ItemModel, ItemsService } from 'src/app/services/items.service';
 
 @Component({
@@ -13,7 +16,7 @@ export class AddOrEditFormComponent implements OnInit {
   addoredit: FormGroup = new FormGroup({})
   id = this.route.snapshot.params['id']
 
-  constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router){}
+  constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private auth: AuthService, private fireStore: AngularFirestore){}
   ngOnInit(): void {
     this.addoredit = new FormGroup({
       'name': new FormControl(null, Validators.required),
@@ -49,10 +52,28 @@ export class AddOrEditFormComponent implements OnInit {
       director: this.addoredit.get('director')?.value, 
       photo: this.addoredit.get('photo')?.value, 
       rating: 0, 
+      id: this.route.snapshot.params['id'],
       trailer: this.addoredit.get('trailer')?.value,
       category: this.addoredit.get('categories')?.value,
       year: this.addoredit.get('year')?.value
     }
+    this.fireStore.collection('users').get().pipe(map((res: any) => {
+        const tempDoc: any[] = []
+        res.forEach((doc: any) => {
+           tempDoc.push({ id: doc.id, ...doc.data() })
+        })
+        return tempDoc
+    })).subscribe( res => {
+        for(let user of res){
+          for(let i=0; i<user.savedMovies.length; i++){
+            if(user.savedMovies[i].id === this.route.snapshot.params['id']){
+              let array1 = user.savedMovies.splice(0, i)
+            let array2 = user.savedMovies.splice(i+1, user.savedMovies.length)
+              this.fireStore.collection('users').doc(user.uid).update({ savedMovies: [...array1.concat(array2), edittedMovie] })
+            }
+          }
+        }
+    })
     this.itemsService.editItem(this.route.snapshot.params['id'], edittedMovie).subscribe()
     this.router.navigate(['/admin'])
   }

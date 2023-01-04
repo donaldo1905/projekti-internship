@@ -22,10 +22,13 @@ constructor(private auth: AuthService, private fireStore: AngularFirestore){}
         if(res.data()!.savedMovies[i].id === item.id){
           let array1 = res.data()!.savedMovies.splice(0, i)
           let array2 = res.data()!.savedMovies.splice(i+1, res.data()!.savedMovies.length)
-          console.log(array1.concat(array2))
           this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({ savedMovies: array1.concat(array2) })
         }
        }
     })
+  }
+
+  logout(): void {
+    this.auth.signOut()
   }
 }
