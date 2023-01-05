@@ -51,7 +51,7 @@ export class AddOrEditFormComponent implements OnInit {
       description: this.addoredit.get('description')?.value, 
       director: this.addoredit.get('director')?.value, 
       photo: this.addoredit.get('photo')?.value, 
-      rating: 0, 
+      rating: [], 
       id: this.route.snapshot.params['id'],
       trailer: this.addoredit.get('trailer')?.value,
       category: this.addoredit.get('categories')?.value,
@@ -86,7 +86,7 @@ export class AddOrEditFormComponent implements OnInit {
       description: this.addoredit.get('description')?.value, 
       director: this.addoredit.get('director')?.value, 
       photo: this.addoredit.get('photo')?.value, 
-      rating: 0, 
+      rating: [], 
       trailer: this.addoredit.get('trailer')?.value,
       category: this.addoredit.get('categories')?.value,
       year: this.addoredit.get('year')?.value

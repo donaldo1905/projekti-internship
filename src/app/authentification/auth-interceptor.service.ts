@@ -14,7 +14,6 @@ intercept(req: HttpRequest<any>, next: HttpHandler){
     if (!user) {
           return next.handle(req);
         }
-        console.log(user)
       const modifiedReq = req.clone({params : new HttpParams().set('auth', user)})
     return next.handle(modifiedReq)
     

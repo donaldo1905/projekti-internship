@@ -6,7 +6,7 @@ export interface ItemModel{
   name: string,
   runTime: number,
   category: string[],
-  rating: number,
+  rating: {id: string, rating: number}[],
   comments: string[],
   description: string,
   director: string,
@@ -37,6 +37,10 @@ export class ItemsService {
 
   editItem(id: string, item: ItemModel): Observable<ItemModel>{
     return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json", item)
+  }
+
+  rateItem(id: string, rating: {id: string, rating: number}[]){
+    return this.http.patch("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json", {'rating' :rating})
   }
 
   delete(item: ItemModel): Observable<ItemModel>{

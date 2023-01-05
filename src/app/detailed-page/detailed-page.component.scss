@@ -46,12 +46,11 @@ h1 { font-size: 1.5em; margin: 10px; }
 .rating { 
   border: none;
   float: left;
-  transform: translateX(45%);
 }
 
 .rating > input { display: none; } 
 .rating > label:before { 
-  margin: 5px;
+  margin: 4px;
   font-size: 1.25em;
   font-family: FontAwesome;
   display: inline-block;
@@ -79,3 +78,17 @@ h1 { font-size: 1.5em; margin: 10px; }
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
   
+mat-form-field {
+  display: flex;
+  background-color: white !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline.specific-border .mat-form-field-outline  {
+  background-color: white !important;
+  border-radius: 5px;  
+}
+
+button{
+  float: right;
+  margin: .5rem;
+}

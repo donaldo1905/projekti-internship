@@ -5,9 +5,11 @@
         <a class="navbar-brand" style="cursor: pointer;" routerLink="/home">Movies2watch</a>
     </div>
     <div class="logo-align">
-        <button color="primary" mat-button routerLink="/savedmovies"><i class="material-icons nav-icons">save</i></button>
+        <button color="primary" mat-button routerLink="/savedmovies"><i
+                class="material-icons nav-icons">save</i></button>
         <h2 style="margin:0">Welcome, {{activeUser?.firstName}}</h2>
-        <button color="warn" mat-button (click)="logout()"><i class="material-icons px-4 nav-icons">exit_to_app</i></button>
+        <button color="warn" mat-button (click)="logout()"><i
+                class="material-icons px-4 nav-icons">exit_to_app</i></button>
     </div>
 </nav>
 <br>
@@ -26,26 +28,52 @@
                         <h3><b>Release Year: </b>{{item?.year}}</h3>
                         <h3><b>Runtime: </b>{{item?.runTime}}</h3>
                         <h3><b>Categories: </b>{{item?.category}}</h3>
-                        <h3><b>Rating: </b>{{item?.rating}}</h3>
-                        <h3><fieldset class="rating">
-                            <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
-                            <input type="radio" id="star4half" name="rating" value="4 and a half" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-                            <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>
-                            <input type="radio" id="star3half" name="rating" value="3 and a half" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-                            <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Meh - 3 stars"></label>
-                            <input type="radio" id="star2half" name="rating" value="2 and a half" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-                            <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
-                            <input type="radio" id="star1half" name="rating" value="1 and a half" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-                            <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
-                            <input type="radio" id="starhalf" name="rating" value="half" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
-                        </fieldset></h3>
-                        
+                        <h3><b>Rating: </b>{{averageRating | number}}</h3>
+                        <h3>
+                            <fieldset class="rating">
+                                <input type="radio" id="star10" value=10 name="rating" [formControl]="ten"
+                                    (click)="ratingMethod(ten)" [checked]="currentRating === 10" /><label class="full"
+                                    for="star10"></label>
+                                <input type="radio" id="star9" value=9 name="rating" [formControl]="nine"
+                                    (click)="ratingMethod(nine)" [checked]="currentRating === 9" /><label class="full"
+                                    for="star9"></label>
+                                <input type="radio" id="star8" value=8 name="rating" [formControl]="eight"
+                                    (click)="ratingMethod(eight)" [checked]="currentRating === 8" /><label class="full"
+                                    for="star8"></label>
+                                <input type="radio" id="star7" value=7 name="rating" [formControl]="seven"
+                                    (click)="ratingMethod(seven)" [checked]="currentRating === 7" /><label class="full"
+                                    for="star7"></label>
+                                <input type="radio" id="star6" value=6 name="rating" [formControl]="six"
+                                    (click)="ratingMethod(six)" [checked]="currentRating === 6" /><label class="full"
+                                    for="star6"></label>
+                                <input type="radio" id="star5" value=5 name="rating" [formControl]="five"
+                                    (click)="ratingMethod(five)" [checked]="currentRating === 5" /><label class="full"
+                                    for="star5"></label>
+                                <input type="radio" id="star4" value=4 name="rating" [formControl]="four"
+                                    (click)="ratingMethod(four)" [checked]="currentRating === 4" /><label class="full"
+                                    for="star4"></label>
+                                <input type="radio" id="star3" value=3 name="rating" [formControl]="three"
+                                    (click)="ratingMethod(three)" [checked]="currentRating === 3" /><label class="full"
+                                    for="star3"></label>
+                                <input type="radio" id="star2" value=2 name="rating" [formControl]="two"
+                                    (click)="ratingMethod(two)" [checked]="currentRating === 2" /><label class="full"
+                                    for="star2"></label>
+                                <input type="radio" id="star1" value=1 name="rating" [formControl]="one"
+                                    (click)="ratingMethod(one)" [checked]="currentRating === 1" /><label class="full"
+                                    for="star1"></label>
+                            </fieldset>
+                        </h3>
                     </div>
                     <div class="col-7"><iframe width="420" height="315" [src]="trailer! | safe"></iframe></div>
                 </div>
             </div>
             <br>
             <p class="description">{{item?.description}}</p>
+            <mat-form-field appearance="outline">
+                <mat-label>Add a comment</mat-label>
+                <textarea matInput></textarea> 
+                <button mat-raised-button color="primary" mat-button>Add</button>
+            </mat-form-field>
         </div>
     </div>
 </div>
