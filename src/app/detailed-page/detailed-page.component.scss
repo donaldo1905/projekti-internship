@@ -92,3 +92,22 @@ button{
   float: right;
   margin: .5rem;
 }
+
+.comments {
+  position: relative;
+  background-color: rgb(245, 242, 242);
+  border-radius: 25px;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.comments > * {
+  margin: 0 10px;
+}
+
+.comments > i {
+  position: absolute;
+  right: 0%;
+}

@@ -28,7 +28,7 @@
                         <h3><b>Release Year: </b>{{item?.year}}</h3>
                         <h3><b>Runtime: </b>{{item?.runTime}}</h3>
                         <h3><b>Categories: </b>{{item?.category}}</h3>
-                        <h3><b>Rating: </b>{{averageRating | number}}</h3>
+                        <h3><b>Average Rating: </b>{{averageRating | number}}</h3>
                         <h3>
                             <fieldset class="rating">
                                 <input type="radio" id="star10" value=10 name="rating" [formControl]="ten"
@@ -71,9 +71,14 @@
             <p class="description">{{item?.description}}</p>
             <mat-form-field appearance="outline">
                 <mat-label>Add a comment</mat-label>
-                <textarea matInput></textarea> 
-                <button mat-raised-button color="primary" mat-button>Add</button>
+                <textarea matInput [formControl]="commentForm"></textarea> 
+                <button mat-raised-button color="primary" mat-button (click)="addComment()" [disabled]="!commentForm.valid">Add</button>
             </mat-form-field>
+            <div *ngFor="let comment of item?.comments;" class="comments">
+                <h3><b>{{comment.name}}</b></h3>
+                <p>{{comment.comment}}</p>
+                <i class="material-icons" style="font-size:x-large; cursor: pointer;" (click)="deleteComment(comment)" *ngIf="comment?.name === activeUser?.firstName">delete</i>
+            </div>
         </div>
     </div>
 </div>

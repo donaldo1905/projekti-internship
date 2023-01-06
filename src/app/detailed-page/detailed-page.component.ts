@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, User } from '../authentification/auth.service';
 import { ItemModel, ItemsService } from '../services/items.service';
@@ -26,6 +26,7 @@ seven = new FormControl(7)
 eight = new FormControl(8)
 nine = new FormControl(9)
 ten = new FormControl(10)
+commentForm = new FormControl('', Validators.required)
 constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private auth: AuthService){}
   ngOnInit(): void {
     this.itemsService.getItem(this.route.snapshot.params['id']).subscribe(item => 
@@ -61,17 +62,38 @@ constructor(private itemsService: ItemsService, private route: ActivatedRoute, p
       replace = true
     }
     this.sum = this.sum + this.item!.rating[i].rating
+    this.averageRating = this.sum/this.item.rating.length
     }
+    
     if(!replace){
       this.item.rating.push({id: localStorage.getItem('id')!, rating: +name.value})
       this.itemsService.rateItem(this.route.snapshot.params['id'], this.item.rating).subscribe()
-      this.averageRating = (this.averageRating + +name.value)/2
+      this.averageRating = this.averageRating/2 + +name.value/2
     }
   }else {
       this.itemsService.rateItem(this.route.snapshot.params['id'], [{id: localStorage.getItem('id')!, rating: +name.value}]).subscribe()
-      this.averageRating = +name
+      this.averageRating = +name.value
   }
-  this.averageRating = this.sum/this.item!.rating.length
+ 
   }
 
+  addComment(){
+    let newComment = {
+      name : this.activeUser.firstName,
+      comment : this.commentForm.value!
+    }
+    if(this.item?.comments){
+      this.item.comments.unshift(newComment)
+      this.itemsService.addComment(this.route.snapshot.params['id'], this.item.comments).subscribe()
+    }else{
+      this.item!.comments = [newComment]
+      this.itemsService.addComment(this.route.snapshot.params['id'], [newComment]).subscribe()
+    }
+    this.commentForm.reset()
+  }
+
+  deleteComment(comment: any){
+    this.item?.comments.splice( this.item?.comments.indexOf(comment), 1)
+    this.itemsService.addComment(this.route.snapshot.params['id'], this.item!.comments).subscribe()
+  }
 }
