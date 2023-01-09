@@ -18,6 +18,7 @@ export class AdminPageComponent implements OnInit{
   displayedItemColumns: string[] = ['name', 'director', 'year', 'id', 'edit', 'delete'];
   dataSource: any;
   itemsSource: any;
+  
   constructor(private itemsService: ItemsService, private auth: AuthService, private router: Router, private fireStore: AngularFirestore){}
   ngOnInit(): void {
     this.auth.getUsers().subscribe((res: any) => {
@@ -28,7 +29,6 @@ export class AdminPageComponent implements OnInit{
       }
       this.dataSource = new MatTableDataSource<User[]>(res)
     })
-  
     this.itemsService.getItems().pipe(map((res: any) => {
       const products = []
       for(const key in res){
@@ -42,6 +42,11 @@ export class AdminPageComponent implements OnInit{
       this.itemsSource!.filterPredicate = function(data: any, filter: string): boolean{
       return data.name.toLowerCase().includes(filter)
     }
+    this.itemsService.itemToAdd.subscribe(movie => {
+      const data = this.itemsSource.data;
+          data.push(movie)   
+      this.itemsSource.data = data
+      })
     })
     
   }

@@ -15,6 +15,7 @@ export class AddOrEditFormComponent implements OnInit {
   toppingList: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   addoredit: FormGroup = new FormGroup({})
   id = this.route.snapshot.params['id']
+  activeItem!: ItemModel
 
   constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private auth: AuthService, private fireStore: AngularFirestore){}
   ngOnInit(): void {
@@ -30,6 +31,7 @@ export class AddOrEditFormComponent implements OnInit {
     })
     if(this.route.snapshot.params['id'] !== 'add'){
       this.itemsService.getItem(this.route.snapshot.params['id']).subscribe( res => {
+        this.activeItem = res
         this.addoredit.get('name')?.setValue(res.name)
         this.addoredit.get('director')?.setValue(res.director)
         this.addoredit.get('year')?.setValue(res.year)
@@ -47,11 +49,11 @@ export class AddOrEditFormComponent implements OnInit {
     let edittedMovie: ItemModel = {
       name: this.addoredit.get('name')?.value, 
       runTime: this.addoredit.get('runtime')?.value,
-      comments: [], 
+      comments: this.activeItem.comments,
       description: this.addoredit.get('description')?.value, 
       director: this.addoredit.get('director')?.value, 
       photo: this.addoredit.get('photo')?.value, 
-      rating: [], 
+      rating: this.activeItem.rating,  
       id: this.route.snapshot.params['id'],
       trailer: this.addoredit.get('trailer')?.value,
       category: this.addoredit.get('categories')?.value,
@@ -64,12 +66,14 @@ export class AddOrEditFormComponent implements OnInit {
         })
         return tempDoc
     })).subscribe( res => {
-        for(let user of res){
+        for(let user of res){ 
+          console.log(user.uid)
           for(let i=0; i<user.savedMovies.length; i++){
             if(user.savedMovies[i].id === this.route.snapshot.params['id']){
+
               let array1 = user.savedMovies.splice(0, i)
             let array2 = user.savedMovies.splice(i+1, user.savedMovies.length)
-              this.fireStore.collection('users').doc(user.uid).update({ savedMovies: [...array1.concat(array2), edittedMovie] })
+              this.fireStore.collection('users').doc(user.uid).update({ savedMovies: [array1.concat(array2), edittedMovie] })
             }
           }
         }
@@ -91,7 +95,12 @@ export class AddOrEditFormComponent implements OnInit {
       category: this.addoredit.get('categories')?.value,
       year: this.addoredit.get('year')?.value
     }
-    this.itemsService.createItem(newMovie).subscribe()
+    this.itemsService.createItem(newMovie).subscribe( res => {
+        console.log(res)
+        newMovie.id = res.name
+        this.itemsService.itemToAdd?.next(newMovie)
+      }
+    )
     this.router.navigate(['/admin'])
     }
 }

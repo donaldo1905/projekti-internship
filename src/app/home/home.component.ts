@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   categoriesOptions: string[] = ['Action', 'Comedy', 'Drama', 'Crime', 'Fantasy', 'Adventure', 'Sci-Fi', 'Horror', 'Thriller', 'Historic', 'Epic'];
   filterbytime: FormGroup = new FormGroup({})
   activeUser: any;
+  savedMovies: string[] = [];
   constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router, private fireStore: AngularFirestore) { }
 
   ngOnInit(): void {
@@ -37,7 +38,14 @@ export class HomeComponent implements OnInit {
     })).subscribe((res) => {
       this.items = res;
     })
-    this.fireStore.collection('users').doc(localStorage.getItem('id')!).valueChanges().subscribe(user => this.activeUser = user)
+    this.fireStore.collection('users').doc(localStorage.getItem('id')!).get().subscribe(user => {
+      this.activeUser = user.data()
+      console.log('asddasd')
+      for(let movie of this.activeUser.savedMovies){
+        this.savedMovies.push(movie.id)   
+      }
+    })
+ 
   }
 
   logout(): void {
@@ -115,6 +123,22 @@ export class HomeComponent implements OnInit {
         }
 
       }
+    })
+    this.savedMovies.push(item.id!)
+  }
+  
+  remove(item: ItemModel){
+    this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get().subscribe( res => {
+       for(let i = 0; i< res.data()!.savedMovies.length; i++){
+        if(res.data()!.savedMovies[i].id === item.id){
+          let array1 = res.data()!.savedMovies.splice(0, i)
+          let array2 = res.data()!.savedMovies.splice(i+1, res.data()!.savedMovies.length)
+          console.log(i, this.savedMovies)
+          this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({ savedMovies: array1.concat(array2) })
+          this.savedMovies.splice(i,1)
+
+        }
+       }
     })
   }
 }

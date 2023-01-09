@@ -57,8 +57,8 @@ register(){
   savedMovies: [],
   role: 'user'
 }
-  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value)
- setTimeout(()=> {this.auth.update(userData)}, 1000) 
+  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value,userData)
+//  setTimeout(()=> {this.auth.update(userData)}, 1000) 
 }
 
 

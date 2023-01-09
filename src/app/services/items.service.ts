@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export interface ItemModel{
   name: string,
@@ -20,6 +20,8 @@ export interface ItemModel{
   providedIn: 'root'
 })
 export class ItemsService {
+
+  itemToAdd: Subject<ItemModel> = new Subject<ItemModel>()
 
   constructor(private http: HttpClient) { }
 

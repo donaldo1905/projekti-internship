@@ -36,10 +36,12 @@ export class AuthService {
    })
   }
 
-  register(email: string, password: string){
+  register(email: string, password: string, user: User){
     this.fireAuth.createUserWithEmailAndPassword(email,password).then( res => {
       localStorage.setItem('id', res.user?.uid!)
       this.registerUser(res.user);
+      this.update(user)
+      setTimeout(() => {this.router.navigate(['/home'])}, 1000)
       alert('Success')
     },err => {
       alert(err.message)
