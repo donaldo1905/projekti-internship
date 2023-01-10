@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { ItemModel, ItemsService } from '../services/items.service';
-import { AuthService, User } from '../authentification/auth.service';
+import { AuthService, User } from '../authentication/auth.service';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit {
     })
     this.fireStore.collection('users').doc(localStorage.getItem('id')!).get().subscribe(user => {
       this.activeUser = user.data()
-      console.log('asddasd')
       for(let movie of this.activeUser.savedMovies){
         this.savedMovies.push(movie.id)   
       }

@@ -15,11 +15,10 @@ import { HomeComponent } from './home/home.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import {  HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptorService } from './authentification/auth-interceptor.service';
+import { AuthInterceptorService } from './authentication/auth-interceptor.service';
 import {MatSelectModule} from '@angular/material/select';
 import { LatestPipe } from './pipes/latest.pipe';
 import { AddOrEditFormComponent } from './shared/add-or-edit-form/add-or-edit-form.component';
-import { RatingComponent } from './shared/rating/rating.component';
 import { DetailedPageComponent } from './detailed-page/detailed-page.component';
 import { SafePipe } from './pipes/safe-pipe.pipe';
 import { SavedMoviesComponent } from './saved-movies/saved-movies.component';
@@ -34,7 +33,6 @@ import { MatTableModule } from '@angular/material/table'
     HomeComponent,
     LatestPipe,
     AddOrEditFormComponent,
-    RatingComponent,
     DetailedPageComponent,
     SafePipe,
     SavedMoviesComponent,

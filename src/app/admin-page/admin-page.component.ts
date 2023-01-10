@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { findIndex, map, take, tap } from 'rxjs';
-import { AuthService, User } from '../authentification/auth.service';
+import { AuthService, User } from '../authentication/auth.service';
 import { ItemModel, ItemsService } from '../services/items.service';
 
 
@@ -44,13 +44,21 @@ export class AdminPageComponent implements OnInit{
     }
     this.itemsService.itemToAdd.subscribe(movie => {
       const data = this.itemsSource.data;
-          data.push(movie)   
+      let check = false
+      for(let i=0; i< data.length; i++){
+        if(data[i].id === movie.id){
+          data[i] = movie
+          check = true
+        }
+      } 
+      if(!check){
+        data.push(movie) 
+      }
       this.itemsSource.data = data
       })
     })
-    
   }
-  
+
   deleteItem(item: ItemModel){
     if(window.confirm('Are you sure you want to delete this item?')){
     this.itemsService.delete(item).subscribe()

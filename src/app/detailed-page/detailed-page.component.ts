@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, User } from '../authentification/auth.service';
+import { AuthService, User } from '../authentication/auth.service';
 import { ItemModel, ItemsService } from '../services/items.service';
 
 @Component({
@@ -33,13 +33,13 @@ constructor(private itemsService: ItemsService, private route: ActivatedRoute, p
       { 
         this.trailer = item.trailer.slice(0, 24) + 'embed/' +item.trailer.slice(32)
         this.item = item
-        for(let i=0; i<this.item!.rating.length; i++){
-          this.sum = this.sum + this.item!.rating[i].rating
+        for(let i=0; i<this.item!.rating!.length; i++){
+          this.sum = this.sum + this.item!.rating![i].rating
         } 
-        this.averageRating = this.sum/this.item!.rating.length
-        for(let i=0; i<this.item.rating.length; i++){
-          if(this.item.rating[i].id === localStorage.getItem('id')){ 
-            this.currentRating = this.item.rating[i].rating
+        this.averageRating = this.sum/this.item!.rating!.length
+        for(let i=0; i<this.item.rating!.length; i++){
+          if(this.item.rating![i].id === localStorage.getItem('id')){ 
+            this.currentRating = this.item.rating![i].rating
           }
     }})
     this.auth.getUser().subscribe(user => this.activeUser = user)
@@ -93,7 +93,7 @@ constructor(private itemsService: ItemsService, private route: ActivatedRoute, p
   }
 
   deleteComment(comment: any){
-    this.item?.comments.splice( this.item?.comments.indexOf(comment), 1)
-    this.itemsService.addComment(this.route.snapshot.params['id'], this.item!.comments).subscribe()
+    this.item?.comments!.splice( this.item?.comments!.indexOf(comment), 1)
+    this.itemsService.addComment(this.route.snapshot.params['id'], this.item!.comments!).subscribe()
   }
 }

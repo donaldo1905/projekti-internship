@@ -6,15 +6,15 @@ export interface ItemModel{
   name: string,
   runTime: number,
   category: string[],
-  rating: {id: string, rating: number}[],
-  comments: {name: string, comment: string}[],
+  rating?: {id: string, rating: number}[],
+  comments?: {name: string, comment: string}[],
   description: string,
   director: string,
   photo: string,
   trailer: string,
   year: number,
   id?: string
-}
+} 
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,17 @@ export class ItemsService {
   }
 
   editItem(id: string, item: ItemModel): Observable<ItemModel>{
-    return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json", item)
+    return this.http.patch<ItemModel>("https://projekt-internship-default-rtdb.europe-west1.firebasedatabase.app/items/"+id+".json", 
+    {
+      'name': item.name,
+      'runtime': item.runTime,
+      'category': item.category,
+      'description': item.description,
+      'director': item.director,
+      'photo': item.photo,
+      'trailer': item.trailer,
+      'year': item.year
+    })
   }
 
   rateItem(id: string, rating: {id: string, rating: number}[]){
