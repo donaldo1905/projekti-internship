@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, User } from '../authentication/auth.service';
+import { AuthService } from '../authentication/auth.service';
 import { ItemModel, ItemsService } from '../services/items.service';
 
 @Component({
@@ -27,8 +27,17 @@ eight = new FormControl(8)
 nine = new FormControl(9)
 ten = new FormControl(10)
 commentForm = new FormControl('', Validators.required)
-constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private auth: AuthService){}
+constructor(private itemsService: ItemsService, private route: ActivatedRoute, private authService: AuthService){}
   ngOnInit(): void {
+    this.getItem()
+    this.getActiveUser()
+  }
+
+  getActiveUser(){
+    this.authService.getUser(localStorage.getItem('id')!).get().subscribe(user => this.activeUser = user)
+  }
+
+  getItem(){
     this.itemsService.getItem(this.route.snapshot.params['id']).subscribe(item => 
       { 
         this.trailer = item.trailer.slice(0, 24) + 'embed/' +item.trailer.slice(32)
@@ -42,13 +51,10 @@ constructor(private itemsService: ItemsService, private route: ActivatedRoute, p
             this.currentRating = this.item.rating![i].rating
           }
     }})
-    this.auth.getUser().subscribe(user => this.activeUser = user)
-    
   }
-
   
   logout(): void {
-    this.auth.signOut()
+    this.authService.signOut()
   }
 
   ratingMethod(name: any){

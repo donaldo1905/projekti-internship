@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { ItemModel } from '../services/items.service';
 
 export interface User{
@@ -19,10 +18,9 @@ export interface User{
   providedIn: 'root'
 })
 export class AuthService {
-  userData!: any
-  userId!: string
+
   loggedUser = new BehaviorSubject<any>(null)
-  constructor(private fireAuth: AngularFireAuth, private router: Router, private http: HttpClient, private fireStore: AngularFirestore) {}
+  constructor(private fireAuth: AngularFireAuth, private router: Router, private fireStore: AngularFirestore) {}
 
   login(email: string, password: string){
    this.fireAuth.signInWithEmailAndPassword(email,password).then( (res) => {
@@ -64,12 +62,12 @@ export class AuthService {
     this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({firstName: user.firstName, lastName: user.lastName, role: user.role, ratings: user.ratings, savedMovies: user.savedMovies})
   }
 
-  getUser(){
-    return this.fireStore.collection('users').doc(localStorage.getItem('id')!).valueChanges()
+  getUser(id: string){
+    return this.fireStore.collection('users').doc<User>(id)
   }
 
   getUsers(){
-   return this.fireStore.collection('users').valueChanges()
+   return this.fireStore.collection('users').get()
   }
 
   signOut(){

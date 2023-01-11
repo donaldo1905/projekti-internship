@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
@@ -17,8 +16,12 @@ export class AddOrEditFormComponent implements OnInit {
   id = this.route.snapshot.params['id']
   activeItem!: ItemModel
 
-  constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private auth: AuthService, private fireStore: AngularFirestore){}
+  constructor(private itemsService: ItemsService, private route: ActivatedRoute, private router: Router, private authService: AuthService){}
   ngOnInit(): void {
+ this.setForm()
+  }
+
+  setForm(){
     this.addoredit = new FormGroup({
       'name': new FormControl(null, Validators.required),
       'director': new FormControl(null, Validators.required),
@@ -57,7 +60,7 @@ export class AddOrEditFormComponent implements OnInit {
       category: this.addoredit.get('categories')?.value,
       year: this.addoredit.get('year')?.value
     }
-    this.fireStore.collection('users').get().pipe(map((res: any) => {
+    this.authService.getUsers().pipe(map((res: any) => {
       const tempDoc: any[] = []
       res.forEach((doc: any) => {
          tempDoc.push({ id: doc.id, ...doc.data() })
@@ -66,11 +69,11 @@ export class AddOrEditFormComponent implements OnInit {
     })).subscribe( res => {
         for(let user of res){ 
           console.log(user.uid)
-          for(let i=0; i<user.savedMovies.length; i++){
+          for(let i=0; i<user.savedMovies?.length; i++){
             if(user.savedMovies[i].id === this.route.snapshot.params['id']){
               console.log(user.savedMovies[i].id === this.route.snapshot.params['id'])
               user.savedMovies[i] = edittedMovie
-              this.fireStore.collection('users').doc(user.uid).update({ savedMovies: user.savedMovies })
+              this.authService.getUser(user.uid).update({ savedMovies: user.savedMovies })
             }
           }
         }

@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { ItemModel, ItemsService } from '../services/items.service';
-import { AuthService, User } from '../authentication/auth.service';
+import { AuthService } from '../authentication/auth.service';
 import { Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 @Component({
@@ -24,9 +23,23 @@ export class HomeComponent implements OnInit {
   filterbytime: FormGroup = new FormGroup({})
   activeUser: any;
   savedMovies: string[] = [];
-  constructor(private auth: AuthService, private itemsService: ItemsService, private router: Router, private fireStore: AngularFirestore) { }
+  constructor(private authService: AuthService, private itemsService: ItemsService) { }
 
   ngOnInit(): void {
+    this.getAllItems()
+    this.getAvtiveUser()
+  }
+
+  getAvtiveUser(){
+    this.authService.getUser(localStorage.getItem('id')!).get().subscribe(user => {
+      this.activeUser = user.data()
+      for(let movie of this.activeUser.savedMovies){
+        this.savedMovies.push(movie.id)   
+      }
+    })
+  }
+
+  getAllItems(){
     this.itemsService.getItems().pipe(map((res: any) => {
       const products = []
       for (const key in res) {
@@ -38,17 +51,10 @@ export class HomeComponent implements OnInit {
     })).subscribe((res) => {
       this.items = res;
     })
-    this.fireStore.collection('users').doc(localStorage.getItem('id')!).get().subscribe(user => {
-      this.activeUser = user.data()
-      for(let movie of this.activeUser.savedMovies){
-        this.savedMovies.push(movie.id)   
-      }
-    })
- 
   }
 
   logout(): void {
-    this.auth.signOut()
+    this.authService.signOut()
   }
 
   filteredMovies: Observable<ItemModel[]> = this.searchForm?.valueChanges.pipe(startWith(''), debounceTime(200),
@@ -106,9 +112,9 @@ export class HomeComponent implements OnInit {
     }))
 
   addToSavedList(item: ItemModel) {
-    this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get().subscribe(user => {
+    this.authService.getUser(localStorage.getItem('id')!).get().subscribe((user: any) => {
       if (!user.data()?.savedMovies && !user.data()?.savedMovies?.length) {
-        this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({ savedMovies: [item] })
+        this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: [item] })
       }
       else {
         let check = false
@@ -118,7 +124,7 @@ export class HomeComponent implements OnInit {
           }
         }
         if (!check) {
-          this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({ savedMovies: [...user.data()!.savedMovies, item] })
+          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: [...user.data()!.savedMovies, item] })
         }
 
       }
@@ -127,13 +133,13 @@ export class HomeComponent implements OnInit {
   }
   
   remove(item: ItemModel){
-    this.fireStore.collection('users').doc<User>(localStorage.getItem('id')!).get().subscribe( res => {
+    this.authService.getUser(localStorage.getItem('id')!).get().subscribe( (res: any) => {
        for(let i = 0; i< res.data()!.savedMovies.length; i++){
         if(res.data()!.savedMovies[i].id === item.id){
           let array1 = res.data()!.savedMovies.splice(0, i)
           let array2 = res.data()!.savedMovies.splice(i+1, res.data()!.savedMovies.length)
-          console.log(i, this.savedMovies)
-          this.fireStore.collection('users').doc(localStorage.getItem('id')!).update({ savedMovies: array1.concat(array2) })
+
+          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: array1.concat(array2) })
           this.savedMovies.splice(i,1)
 
         }

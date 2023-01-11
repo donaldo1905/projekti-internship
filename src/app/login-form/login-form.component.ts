@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService, User } from '../authentication/auth.service';
 
 
@@ -13,14 +13,21 @@ loginForm!: FormGroup;
 registerForm!: FormGroup;
 toggle: boolean = false
 
-constructor(private auth: AuthService){}
+constructor(private authService: AuthService){}
 
 ngOnInit(): void {
+  this.setLogInForm()
+  this.setRegisterForm()
+}
+
+setLogInForm(){
   this.loginForm = new FormGroup({
     'loginEmail': new FormControl(null, [Validators.required, Validators.email]),
     'loginPassword': new FormControl(null, [Validators.required, Validators.minLength(8)])
     })
+}
 
+setRegisterForm(){
   this.registerForm = new FormGroup({
     'firstName': new FormControl(null, [Validators.required, Validators.minLength(3)]),
     'lastName': new FormControl(null, [Validators.required, Validators.minLength(3)]),
@@ -31,7 +38,6 @@ ngOnInit(): void {
   this.registerForm.addValidators(
     this.matchValidator(this.registerForm.get('registerPassword')!, this.registerForm.get('confirmPassword')!)
   );
-
 }
 
 matchValidator(
@@ -46,7 +52,7 @@ matchValidator(
 }
 
 login(){
-  this.auth.login(this.loginForm.get('loginEmail')?.value, this.loginForm.get('loginPassword')?.value)
+  this.authService.login(this.loginForm.get('loginEmail')?.value, this.loginForm.get('loginPassword')?.value)
 }
 
 register(){
@@ -57,10 +63,7 @@ register(){
   savedMovies: [],
   role: 'user'
 }
-  this.auth.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value,userData)
-//  setTimeout(()=> {this.auth.update(userData)}, 1000) 
+  this.authService.register(this.registerForm.get('registerEmail')?.value, this.registerForm.get('registerPassword')?.value,userData)
 }
-
-
 
 }
