@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../authentication/auth.service';
-import { ItemModel, ItemsService } from '../services/items.service';
+import { ItemModel } from '../interfaces/interfaces';
+import { ItemsService } from '../services/items.service';
 
 @Component({
   selector: 'app-detailed-page',
@@ -34,7 +35,7 @@ constructor(private itemsService: ItemsService, private route: ActivatedRoute, p
   }
 
   getActiveUser(){
-    this.authService.getUser(localStorage.getItem('id')!).get().subscribe(user => this.activeUser = user)
+    this.authService.getUser(localStorage.getItem('id')!).get().subscribe(user => this.activeUser = user.data())
   }
 
   getItem(){

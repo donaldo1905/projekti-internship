@@ -1,20 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { ItemModel } from '../interfaces/interfaces';
 
-export interface ItemModel{
-  name: string,
-  runTime: number,
-  category: string[],
-  rating?: {id: string, rating: number}[],
-  comments?: {name: string, comment: string}[],
-  description: string,
-  director: string,
-  photo: string,
-  trailer: string,
-  year: number,
-  id?: string
-} 
 
 @Injectable({
   providedIn: 'root'

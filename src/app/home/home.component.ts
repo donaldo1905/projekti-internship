@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
-import { ItemModel, ItemsService } from '../services/items.service';
+import { ItemsService } from '../services/items.service';
 import { AuthService } from '../authentication/auth.service';
-import { Router } from '@angular/router';
-
+import { ItemModel } from '../interfaces/interfaces';
 
 @Component({
   selector: 'app-home',
@@ -112,38 +111,32 @@ export class HomeComponent implements OnInit {
     }))
 
   addToSavedList(item: ItemModel) {
-    this.authService.getUser(localStorage.getItem('id')!).get().subscribe((user: any) => {
-      if (!user.data()?.savedMovies && !user.data()?.savedMovies?.length) {
+      if (!this.activeUser?.savedMovies) {
         this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: [item] })
       }
       else {
         let check = false
-        for (let movie of user.data()!.savedMovies) {
+        for (let movie of this.activeUser!.savedMovies) {
           if (item.id === movie.id) {
             check = true
           }
         }
         if (!check) {
-          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: [...user.data()!.savedMovies, item] })
+          this.activeUser.savedMovies.push(item)
+          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: this.activeUser!.savedMovies })
         }
 
       }
-    })
     this.savedMovies.push(item.id!)
   }
   
   remove(item: ItemModel){
-    this.authService.getUser(localStorage.getItem('id')!).get().subscribe( (res: any) => {
-       for(let i = 0; i< res.data()!.savedMovies.length; i++){
-        if(res.data()!.savedMovies[i].id === item.id){
-          let array1 = res.data()!.savedMovies.splice(0, i)
-          let array2 = res.data()!.savedMovies.splice(i+1, res.data()!.savedMovies.length)
-
-          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: array1.concat(array2) })
+       for(let i = 0; i< this.activeUser.savedMovies.length; i++){
+        if(this.activeUser.savedMovies[i].id === item.id){
+          this.activeUser.savedMovies.splice(i, 1)
+          this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: this.activeUser.savedMovies })
           this.savedMovies.splice(i,1)
-
         }
        }
-    })
   }
 }

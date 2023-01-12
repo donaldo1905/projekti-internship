@@ -3,16 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs'
-import { ItemModel } from '../services/items.service';
-
-export interface User{
-  firstName: string
-  lastName: string
-  savedMovies: ItemModel[]
-  ratings: {movieId: string, rating: number}[]
-  role: 'user'
-  uid?: string
-}
+import { User } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'

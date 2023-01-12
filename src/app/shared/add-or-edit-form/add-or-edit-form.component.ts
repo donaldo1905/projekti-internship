@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
-import { AuthService, User } from 'src/app/authentication/auth.service';
-import { ItemModel, ItemsService } from 'src/app/services/items.service';
+import { AuthService} from 'src/app/authentication/auth.service';
+import { ItemModel } from 'src/app/interfaces/interfaces';
+import { ItemsService } from 'src/app/services/items.service';
 
 @Component({
   selector: 'app-add-or-edit-form',

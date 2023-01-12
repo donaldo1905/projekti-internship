@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, User } from '../authentication/auth.service';
-import { ItemModel } from '../services/items.service';
+import { AuthService } from '../authentication/auth.service';
+import { ItemModel, User } from '../interfaces/interfaces';
 
 
 @Component({
@@ -20,14 +20,12 @@ constructor(private authService: AuthService){}
   }
 
   remove(item: ItemModel){
-    this.authService.getUser(localStorage.getItem('id')!).get().subscribe( res => {
-       for(let i = 0; i< res.data()!.savedMovies.length; i++){
-        if(res.data()!.savedMovies[i].id === item.id){
+       for(let i = 0; i< this.activeUser!.savedMovies.length; i++){
+        if(this.activeUser?.savedMovies[i].id === item.id){
           this.activeUser?.savedMovies.splice(i,1)
           this.authService.getUser(localStorage.getItem('id')!).update({ savedMovies: this.activeUser?.savedMovies })
         }
        }
-    })
   }
 
   logout(): void {

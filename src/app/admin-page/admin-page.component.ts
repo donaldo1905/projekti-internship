@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { map } from 'rxjs';
-import { AuthService, User } from '../authentication/auth.service';
-import { ItemModel, ItemsService } from '../services/items.service';
+import { AuthService } from '../authentication/auth.service';
+import { ItemModel, User } from '../interfaces/interfaces';
+import { ItemsService } from '../services/items.service';
 
 
 @Component({
@@ -30,11 +31,6 @@ export class AdminPageComponent implements OnInit{
          tempDoc.push({ id: doc.id, ...doc.data() })
       })
       return tempDoc})).subscribe((res: any) => {
-      for(let user of res){
-        if(user.role === 'admin'){
-          res.splice(res.indexOf(user), 1)
-        }
-      }
       this.dataSource = new MatTableDataSource<User[]>(res)
     })
   }
@@ -73,23 +69,14 @@ export class AdminPageComponent implements OnInit{
   deleteItem(item: ItemModel){
     if(window.confirm('Are you sure you want to delete this item?')){
     this.itemsService.delete(item).subscribe()
-    this.authService.getUsers().pipe(map((res: any) => {
-      const tempDoc: any[] = []
-      res.forEach((doc: any) => {
-         tempDoc.push({ id: doc.id, ...doc.data() })
-      })
-      return tempDoc
-  })).subscribe( res => {
-      for(let user of res){
-        for(let i=0; i<user.savedMovies?.length; i++){
-          if(user.savedMovies[i].id === item.id){
-            let array1 = user.savedMovies.splice(0, i)
-          let array2 = user.savedMovies.splice(i+1, user.savedMovies.length)
-            this.authService.getUser(user.uid).update({ savedMovies: array1.concat(array2) })
-          }
-        }
-      }
-  })
+    for(let user of this.dataSource.data){
+      if(user.savedMovies){
+      for(let i=0; i< user.savedMovies.length; i++){
+        if(user.savedMovies[i].id === item.id)
+        user.savedMovies.splice(i, 1)
+        this.authService.getUser(user.uid).update({ savedMovies: user.savedMovies})
+      }}
+    }
      this.itemsSource.data.splice(this.itemsSource.data.indexOf(item), 1)
      this.itemsSource._updateChangeSubscription()
   }}
